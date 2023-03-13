@@ -641,33 +641,74 @@ This is an iterative process. The model from the first tclean is used to calibra
 .. code-block::
 
    default(gaincal)
-   gaincal(vis='SGRB-avg-split.ms', caltable='selcal-p1.GT', append=False, field='0', spw='0', uvrange='', solint = '8min', refant ='C00', minsnr = 2.0, gaintype = 'G', solnorm= False, calmode ='p', gaintable = [], interp = ['nearest,nearestflag'], parang = True)
-
-Using the task "plotcal" you can examine the gain table. In successive iterations of self-calibration, you should find that the phases are more and more tightly scattered around zero. If this trend is not there, you can suspect that the self-calibration is not going well - check the previous tclean runs to see if the total cleaned flux was increasing.
+   vis ='GRB-avg-split.ms'
+   caltable='selcal-p1.GT'
+   solint = '8min'
+   refant ='C00'
+   minsnr = 3.0
+   gaintype = 'G' 
+   solnorm= False
+   calmode ='p'
+   go gaincal
+   
+  Using the task "plotcal" you can examine the gain table. In successive iterations of self-calibration, you should find that the phases are more and more tightly scattered around zero. If this trend is not there, you can suspect that the self-calibration is not going well - check the previous tclean runs to see if the total cleaned flux was increasing.
 
 .. code-block::
 
    default(applycal)
-   applycal(vis='SGRB-avg-split.ms', field='', gaintable='selcal-p1.GT', gainfield='', applymode='calflag', interp=['linear'], calwt=False, parang=False)
+   vis='SGRB-avg-split.ms'
+   gaintable='selcal-p1.GT'
+   applymode='calflag'
+   interp=['linear']
+   go applycal
 
-
-We will split the corrected data to a new file and use it for imaging. This is just for better book-keeping.
+We will split the corrected data to a new file and use it for imaging. This is just for better book-keeping. You may choose to do the successive self-calibration iterations on the same MS file but remember that the corrected data and model data columns will be overwritten by applycal and tclean.
 
 .. code-block::
 
    default(mstransform)
-   mstransform(vis='SGRB-avg-split.ms', field='0', spw='0', datacolumn='corrected', outputvis='vis-selfcal-p1.ms')
+   vis='SGRB-avg-split.ms'
+   datacolumn='corrected' 
+   outputvis='vis-selfcal-p1.ms'
+   go mstransform
+   
 
-In the next iteration we will use a larger niter and lower the threshold. In the tclean messages do check the total cleaned flux and the number of iteration needed to reach that.
-
+In the next iteration we will use a larger niter and lower the threshold. In the tclean messages do check the total cleaned flux and the number of iterations needed to reach that.
 
 .. code-block::
 
    default(tclean)
+   imagename='SGRB-img1'
+   imsize=6000
+   cell='1.0arcsec'
+   specmode='mfs'
+   gridder='wproject'
+   wprojplanes=128 
+   pblimit=0.0001
+   deconvolver='mtmfs'
+   nterms=2 
+   weighting='briggs'
+   robust=0
+   niter=2000
+   threshold='1.0mJy'
+   cyclefactor = 0.5 
+   interactive=False
+   usemask='auto-multithresh'
+   pbmask=0.0
+   savemodel='modelcolumn'
+   inp tclean
+   go tclean
    tclean(vis='vis-selfcal-p1.ms', imagename='SGRB-img-1', selectdata= True, field='0', spw='0', imsize=9000, cell='1.0arcsec', robust=0, weighting='briggs', specmode='mfs', nterms=2, niter=3000, usemask='auto-multithresh',minbeamfrac=0.1, smallscalebias=0.6, threshold='0.5mJy', pblimit=-1, deconvolver='mtmfs', gridder='wproject', wprojplanes=128, wbawp=False, restoration = True, savemodel='modelcolumn', cyclefactor = 0.5, parallel=False, interactive=False)
 
 
 Repeat until you stop seeing improvement in the image sensitivity.
+
+.. figure:: /images/continuum/sgrb-image2.png
+   :alt: The central part of the image produced by tclean. You can still see patterns around the sources due to the effect of the beam.
+   :align: center
+   :scale: 70% 
+
+   *A zoom-in on the central region of the image after self-calibration.*
 
 After you get your final image you need to do a primary beam correction. The task "widebandpbcor" in CASA does not have the information of the GMRT primary beam shape. A new task has been written for that. You can refer to uGMRT primary beam to get that task and follow the instructions with it to do a primary beam correction for your data.
 
