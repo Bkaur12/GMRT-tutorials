@@ -702,7 +702,7 @@ In the next iteration we will use a larger niter and lower the threshold. In the
 
 Repeat until you stop seeing improvement in the image sensitivity.
 
-.. figure:: /images/continuum/sgrb-image-selfcal.png.png
+.. figure:: /images/continuum/sgrb-image-selfcal.png
    :alt: The central part of the image produced by tclean. You can still see patterns around the sources due to the effect of the beam.
    :align: center
    :scale: 70% 
