@@ -183,6 +183,7 @@ Using ``plotms``, find out which antennas were not working. Non-working antennas
 the task ``flagdata``. 
 
 .. admonition:: Note
+
    Only an example is provided here - you need to locate the bad antennas in the tutorial data and flag those. 
 
 Remember also that the some antennas may not be bad at all times. However if an antennas stops working while on the target source, it can be difficult to find out. Thus make a decision based on the secondary calibrator scans. Depending on when such antennas stopped working, you can choose to flag them for that duration. Check the two polarizations separately.
@@ -257,6 +258,7 @@ If we are satisfied, we could run the same task with ``action = 'apply'``.
    :scale: 70% 
 
 .. admonition:: Note
+
    If you happen to wrongly flag and would like to restore the older flags, use the task ``flagmanager`` to restore the flags to the stage that you would like to by providing the versionname. Then use the task ``flagmanager`` again with the to delete the unwanted flagbackup tables.
 
 
