@@ -259,7 +259,7 @@ If we are satisfied, we could run the same task with ``action = 'apply'``.
 
 .. admonition:: Note
 
-   If you happen to wrongly flag and would like to restore the older flags, use the task ``flagmanager`` to restore the flags to the stage that you would like to by providing the versionname. Then use the task ``flagmanager`` again with the to delete the unwanted flagbackup tables.
+   If you happen to wrongly flag and would like to restore the older flags, use the task ``flagmanager`` with mode = 'list' to see the flagbackup versions. Locate the version to which you want to restore and run flagmanager with mode ='restore' providing the versionname. After that use the task ``flagmanager`` again with the to delete the unwanted flagbackup versions using it with mode ='delete' and giving the unwanted versionnames.
 
 
 Now we extend the flags (growtime 80 means if more than 80% is flagged then fully flag, change if required) 
@@ -280,7 +280,7 @@ Now we extend the flags (growtime 80 means if more than 80% is flagged then full
 Absolute flux density calibration
 ----------------------------------
 
-In this step, flux densities are set for the standard flux calibrator in the data. 
+In this step, flux densities are set for the standard flux calibrator in the data. The standard flux calibrators used at the GMRT are 3C286, 3C48 and 3C147. We can chose the flux density standard in this task. The default choice is Perlay-Butler 2017.
 
 .. code-block::
 
@@ -302,6 +302,9 @@ Delay and bandpass calibration
 First we will do delay calibration. In calibration, a reference antenna is required. Here "C00" is only taken as an example. You may use any antenna that is working for the whole duration of the observation. We will henceforth be using a central portion of the bandwidth. Depending on 
 the shape of the band, you may change this selection.
 
+.. admonition:: Note
+   Using ``plotms`` you can choose to plot Amp Vs Channels iterating over baselines (choosing a single antenna will restrict the plot to baselines of that antenna - this will help keep the data volume selected for plotting reasonable) to see the response over the frequency channels and then decide the start and end points of channel selection. At the edges of the band the gain is low and thus we want to avoid those parts of the band.
+
 
 .. code-block::
 
@@ -316,7 +319,6 @@ the shape of the band, you may change this selection.
    gaintype = 'K'
    inp gaincal
    go gaincal
-
 
 
 
@@ -423,7 +425,7 @@ The flux density of the phase calibrator will be set in the following step.
 Transfer of gain calibration to the target
 -------------------------------------------
 
-First we apply the calibration to the amplitude and phase calibrators. This taskcreates the *corrected* data column in the MS file.
+First we apply the calibration to the amplitude and phase calibrators. This task creates the *corrected* data column in the MS file.
 
 .. code-block::
 
@@ -457,7 +459,7 @@ First we apply the calibration to the amplitude and phase calibrators. This task
 
 
 
-Calibrate the target. 
+Apply calibration to the target. 
 
 .. code-block::
 
@@ -492,7 +494,7 @@ Use the task ``plotms`` to examine the calibrated data. You need to select *corr
 You will notice that there are some baselines showing higher amplitudes than the majority or some showing a large scatter.
 
 Use ``plotms`` to locate which antennas and baselines have the outlier data. 
-Use the task ``flagdata`` to flag that data. 
+Use the task ``flagdata`` to flag those data. 
 
 Splitting the calibrated target source data
 --------------------------------------------
@@ -531,9 +533,7 @@ In this section flagging is done on calibrated target source data.
    inp flagdata
    go flagdata
 
-   flagdata(vis='SGRB-split.ms',mode="tfcrop", datacolumn="data", field='', antenna='',spw = '', ntime="scan", timecutoff=5.0, freqcutoff=5.0, timefit="poly",freqfit="line",flagdimension="freqtime", extendflags=False, timedevscale=5.0,freqdevscale=5.0, extendpols=False,growaround=False, action="apply", flagbackup=True,overwrite=True, writeflags=True)
-
-flagdata(vis='SGRB-split.ms',mode="tfcrop",timecutoff=5.0, freqcutoff=5.0, timefit="line",freqfit="poly", extendflags=False)
+ 
 
 You may try out using window statistics and vary ntime to attain better flagging. Though always be careful about not overdoing the flags.
 
@@ -553,8 +553,6 @@ The mode ``rflag`` needs to be used with more caution. It is better to select uv
    inp flagdata
    go flagdata
 
-   
-   flagdata(vis='SGRB-split.ms',mode="rflag",datacolumn="data",field='', timecutoff=5.0, antenna='',spw = '', freqcutoff=5.0,timefit="poly",freqfit="poly",flagdimension="freqtime", extendflags=False, timedevscale=5.0,freqdevscale=5.0,spectralmax=500.0,extendpols=False, growaround=False, flagneartime=False,flagnearfreq=False,action="apply",flagbackup=True,overwrite=True, writeflags=True)
 
 Examine the data using ``plotms``. Flag individual baselines as may be needed.
 
@@ -563,7 +561,7 @@ Averaging in frequency
 -----------------------
 
 The data are averaged in frequency to reduce the volume of the data. However the averaging is done only such that one is not affected by *bandwidth smearing*. For Band 4 it is recommended to average up to 10 channels (when BW is 200 MHz over 2048 channels). However in order to keep the computation time reasonable, for this tutorial we will average 20 channels. You can check the effect of this on the shapes of the 
-sources at the edges of the field.
+sources at the edge of the field.
 
 
 .. code-block::
@@ -578,12 +576,17 @@ sources at the edges of the field.
    go mstransform
 
 Some more flagging will be done on the data at this stage to get the final dataset for imaging.
+Use ``plotms`` to decide on where and what you would like to flag and proceed accordingly.
 
 
 Imaging
 --------
 
-We will use the task tclean for imaging. To save on computation, in this example we have set wprojplanes=128. In general to account for the w-term more accurately set wprojplanes= -1 so that it will be calculated internally in CASA. In this example we have used *interactive = False* in tclean. You may choose to do an *interactive = True*, put the boxes on the sources you want to deconvolve manually to learn the process. 
+We will use the task ``tclean`` for imaging. Go through the CASA documentation for tclean to understand the meaning of the various parameters. 
+To save on computation, in this example we have set wprojplanes=128. In general to account for the w-term more accurately set wprojplanes= -1 so that it will be calculated internally in CASA. In this example we have used *interactive = False* in tclean. 
+
+.. admonition:: Things to try
+   To go step by step you can choose to do tclean keeping niter=0. This will make an image where no deconvolution would have been done - i. e. it will be a 'dirty image'. When doing tclean with non-zero niter, you may choose to do an *interactive = True*, put the boxes on the sources you want to deconvolve manually to learn the process. Read the CASA documentation to do an interactive tclean. This can enable you to control the mask.
 
 
 .. code-block::
@@ -622,10 +625,10 @@ Also inspect the rest of the images created by tclean - the .psf, .mask, .model,
 
    imview
 
-.. figure:: /images/continuum/importgmrtlog.png
-   :alt: Screenshot of the plotms Amp Vs time after calibration
+.. figure:: /images/continuum/sgrb-image1.png
+   :alt: The central part of the image produced by tclean. You can still see patterns around the sources due to the effect of the beam.
    :align: center
-   :scale: 100% 
+   :scale: 70% 
 
    *A zoom-in on the central region of the first image.*
 
