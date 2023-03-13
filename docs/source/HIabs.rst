@@ -22,7 +22,7 @@ Note that the steps mentioned for file vis='example.ms' are more general. For th
 LTA to FITS conversion
 +++++++++++++++++++++++
 
-The GMRT data is available in raw telescope format, called LTA, which stands for long term accumulation. For the data to be converted to FITS format, listscan and gvfits are used. These binary executable can be downloaded from GMRT portal, and to be made an executable, the command "chmod +x" can be used as follows:
+The GMRT data is available in raw telescope format, called LTA, which stands for long term accumulation. For the data to be converted to FITS format, listscan and gvfits are used. These binary executables can be downloaded from GMRT portal, and make them executable, use the command "chmod +x" as follows:
 
 .. code-block:: 
    
@@ -49,7 +49,7 @@ FITS to MS conversion
 
 At this stage start CASA using the command ``casa`` on your terminal. You will be on the Ipython prompt and a logger window will appear. 
 The remaining analysis will be done at the CASA Ipython prompt. We use the CASA task importgmrt to convert 
-data from FITS to MS format. In our case the FITS file is already provided as "UVDATA" file so we proceed with that FITS file.
+data from FITS to MS format. In our case, the FITS file is already provided as "UVDATA" file so we proceed with that FITS file.
 
 .. code-block::
 
@@ -110,7 +110,7 @@ You can also choose to save the output to a text file so that you can refer to i
    go 
 
 Note the scans, field ids, source names, number of channels, total bandwidth, channel width and central frequency for your observations. Identify the science target, flux calibrators(s) and the phase calibrator(s).
-Both field IDs (e.g. 0,1,2) and names (e.g. 3C48, 0311+430, etc.) can be used in subsequent tasks to select on the corresponding sources.In the tutorial dataset presented, no phase calibrator was used, as the target itself is bright. Hence only a flux calibrator and the target is present, with field id 0 and 1 respectively. Also note that in this tutorial the steps are shown for data where a phase calibrator is also present. **Hence the steps related to phase calibrator operation should be skipped while reducing the sample data provided in the school.**
+Both field IDs (e.g. 0,1,2) and names (e.g. 3C48, 0311+430, etc.) can be used in subsequent tasks to select on the corresponding sources. In the tutorial dataset presented, no phase calibrator was used, as the target itself is bright. Hence only a flux calibrator and the target is present, with field id 0 and 1 respectively. Also note that in this tutorial the steps are shown for data where a phase calibrator is also present. **Hence the steps related to phase calibrator operation should be skipped while reducing the sample data provided in the school.**
 
 There can be cases where the data file contains multiple observations with two or more targets. In this case, we may wish to split the dataset containing only the target we are interested in along with the calibrators related to it. For example, if we would like to split the field ids 0,1,2 and 7 with channels from 1403 to 3450, it is done as follows:
 
@@ -124,10 +124,9 @@ There can be cases where the data file contains multiple observations with two o
    go 
 
 
-Using online database like NASA NED or SIMBAD we learn more about the target like its type, redshift, etc. From the redshift value, we can determine the frequency at which we expect the spectral line to be present. In the tutorial dataset given, the target 0311+430, also known as 3C 082 (can be found from NED) is a Quasar with a redshift of z=2.87. From this, using f' = fo/(1+z), where fo is the rest frequecny of line, 1420 MHz we get the frequency at which the line should be. Note that this is case where the absorbing (or emitting gas) is close to the background target. 
-If the gas is present somewhere between us and the target, we won't be able to locate the frequency of the line in this way; as can be seen in the provided data set, the line doesn't lie at calculated frequency. 
+Using online database, like NASA NED or SIMBAD, we can learn more about the target e.g., type, redshift, etc. Our science target is a Damped Lyman alpha absorber (DLA) at z=2.289, with a background quasar at z=2.87. We will be looking for HI 21cm absorption of the background radiation from the quasar, at the redshift of the intervening absorber. Using the DLA redshift in the relation f' = fo/(1+z), where fo is the rest frequecny of HI 21cm transition fo= 1420.4057 MHz, we get the frequency of the expected HI 21cm absorption line, f'=431.86 MHz. 
 
-The task ``plotms`` is used to plot the data. It opens a GUI in which you can choose to display portions of your data.
+The task ``plotms`` is used to plot the data. It opens a GUI where you can select a variety of ways to visualize your data.
 Go through the help for plotms GUI in CASA documentation for more details on its usage **link needed**.
 It is important to make a good choice of parameters to plot so that you do not end up asking to plot too much data at the same 
 time. Our aim is to inspect the data for non-working antennas. A good choice would be to limit the fields to 
