@@ -126,22 +126,19 @@ There can be cases where the data file contains multiple observations with two o
 
 Using online database, like NASA NED or SIMBAD, we can learn more about the target e.g., type, redshift, etc. Our science target is a Damped Lyman alpha absorber (DLA) at z=2.289, with a background quasar at z=2.87. We will be looking for HI 21cm absorption of the background radiation from the quasar, at the redshift of the intervening absorber. Using the DLA redshift in the relation f' = fo/(1+z), where fo is the rest frequecny of HI 21cm transition fo= 1420.4057 MHz, we get the frequency of the expected HI 21cm absorption line, f'=431.86 MHz. 
 
-The task ``plotms`` is used to plot the data. It opens a GUI where you can select a variety of ways to visualize your data.
-Go through the help for plotms GUI in CASA documentation for more details on its usage **link needed**.
+The task ``plotms`` is used to plot the data. It opens a GUI which provides variety of ways to visualize your data.
+For more details on its usage, go through the help for plotms GUI in CASA documentation **link needed**.
 It is important to make a good choice of parameters to plot so that you do not end up asking to plot too much data at the same 
-time. Our aim is to inspect the data for non-working antennas. A good choice would be to limit the fields to 
-calibrators and choosing a single channel and plot Amp Vs Time and iterating over antennas. 
-Another good plot for inspection is to choose a single antenna, choose all the channels and plot Amp Vs Channel while iterating 
+time. Our aim is to inspect the data and look for non-working antennas. A good choice would be to select a single channel calibrator(s) visibilities and plot amplitude as a function of time, iterating over antennas. 
+Another good plot for inspection will be to select the calibrator(s) data and plot amplitude as a dunction of channels while iterating 
 over baselines.
 
 .. admonition:: Note
 
-   For spectral line analysis, usually the targets are point sources and we do not require the use of data from central square baselines of    
-   uGMRT. This is because these are mostly relevant for imaging extended objects and also are prone to have higher RFIs (Radio frequency 
+   Our science target is a point source, hence, we do not need to use the data from the central square baselines. This is because these are mostly    relevant for imaging extended objects and also are prone to have higher RFIs (Radio frequency 
    interferences). Hence they are omitted from the entire process, by setting the condition uvrange='>1.5km' in the functions.
 
-Hence in plotms, to view the data as shown in the following image, set spw as 0:400, uvrange as >1.5km and corr as rr. Iteration over anntennas in the Page tab seen on the left of the plotms window should be selected. From the Axes tab, choose x-axis as time and data as amp.
-It is good to set the inputs for a task to default before running it. 
+To view the data, as shown in the following image, set spw = 0:400, uvrange = >1.5km and corr = rr. To choose the axes, select the "Axes" tab on the top horizontal bar; on this page you can choose x-axis as time and data as amp. To iterate over antennas, select the "Page" tab on the left vertical bar of the plotms window, and select antennas on the drop down menu for "Axis". 
 
 .. code-block::
 
@@ -159,9 +156,8 @@ It is good to set the inputs for a task to default before running it.
 Flagging
 ---------
 
-Editing out bad data (e. g. non-working antennas, RFI affected channels, etc.) is termed as flagging. In our MS file, 
-the bad data will be marked with flags and not actually removed as such - thus the term *flagging*.
-The task ``flagdata`` will be used to flag the data. See the detailed CASA documentation on flagging using the 
+Editing out bad data (e. g. non-working antennas, RFI affected channels, etc.) is termed as flagging. 
+The task ``flagdata`` will be used to flag the data. Using this task, we can flag the data manually as well as using various automated algorithms. See the detailed CASA documentation on flagging using the 
 task ``flagdata``.
 
 Here some typical steps of flagging are outlined to get you started.
@@ -181,16 +177,16 @@ Usually the first spectral channel is saturated. Thus it is a good idea to flag 
    go 
 
    
-In the next step we would like to flag data on antennas that were not working.
-Using ``plotms``, plot the freq vs amp(data) with iteration of antenna with uvrange>1.5 km, and note the behaviour for all the scans. The condition of uvrange>1.5 km is given so as to not use the central square baselines for spectral line imaging.
-Find out which antennas were not working. Non-working antennas *generally* show up as those having very small amplitude even on bright calibrators, show no relative change of amplitude for calibrators and target sources and the phases towards calibrator sources on any given baseline will be randomly distributed between -180 to 180 degreees. If such antennas are found in the data, those can be flagged using 
+In the next step we would like to flag data the antennas that were not working.
+Using ``plotms``, plot the freq vs amp(data) with iteration over antennas and note the behaviour for all the scans.
+Find out which antennas were not working. Non-working antennas *generally* show up as those having very small amplitude even on bright calibrators, show no relative change of amplitude for calibrators and the phases towards calibrator sources on any given baseline will be randomly distributed between -180 to 180 degreees. If such antennas are found in the data, those can be flagged using 
 the task ``flagdata``. 
-**Only an example is provided here - you need to locate the bad antennas in the tutorial data and flag those.** Remember also that some antennas may not be bad at all times. However if an antennas stops working while on the target source, it can be difficult to find out. Thus make a decision based on the secondary calibrator scans. Depending on when such antennas stopped working, you can choose to flag them for that duration. Check the two polarizations separately.
+**Only an example is provided here - you need to locate the dead antennas in the tutorial data and flag those.** Remember also that some antennas may not be bad at all times. However if an antennas stops working while on the target source, it can be difficult to find out. Thus make a decision based on the calibrator scans. Depending on when such antennas stopped working, you can choose to flag them for that duration. 
 
 Although ``plotms`` provides options for flagging data interactively, at this stage, we will choose to just locate the bad data and flag it 
  using the task ``flagdata``.
 
-The following command is an example where the three antennas namely E02, S02 and W06 are non functioning and are flagged. **For the dataset given to you, this may not be the case and hence check for bad antennas.** If all antennas are functioning, skip this step.
+The following command is an example where the three antennas namely E02, S02 and W06 are non functioning and are flagged. **For the dataset given to you, this may not be the case and hence check for dead antennas.** If all antennas are functioning, skip this step.
 
 
 .. code-block::
@@ -208,12 +204,11 @@ The following command is an example where the three antennas namely E02, S02 and
 
 It is a good idea to review the inputs to the task using (``inp``) before running it.
 
-Radio Frequency Interference (RFI) are the manmade radio band signals that enter the data and are unwanted. Signals such as 
-those produced by satellites, aircraft communications are confined to narrow bands in the frequency and will appear as 
+Radio Frequency Interference (RFI) are the human-made radio signals that are picked up by the receiver at the time of observations and are unwanted. Signals such as those produced by satellites, aircraft communications are confined to narrow bands in the frequency and will appear as 
 frequency channels that have very high amplitudes. It is not easy to remove the RFI from such channels and recover our astronomical 
-signal. Thus we will flag the affected channels (may be individual or groups of channels). There are many ways to flag RFI - could be done manually after inspecting the spectra or using automated flaggers that look for outliers.
+signal. Thus we will flag the affected channels (may be individual or groups of channels). There are many ways to flag RFI - could be done manually after inspecting the data or using automated flagging algorithms that look for outliers.
 
-For the dataset given, upon plotting field id 0 with freq vs amp(data), we see that there is a RFI spike. Selecting the data points on the spike (see figure), and look up on the casa log. 
+For our dataset, when we plot flux calibrator (i.e, field id = 0) with freq vs amp(data), we see that there is a RFI spike. To get more information about the spike, we can select the data points (see figure), and look up on the casa log. 
 
 .. figure:: /images/specline/flagrfispike_1.png
    :alt: Plotms screenshot rfi spike 1
@@ -332,11 +327,10 @@ This displays the list of all flag operations performed. Note the flag version n
    go
 
 
-
-Intital Gain calibration before flagging of unwanted data
+Complex gain calibration
 ---------------------------------------------------------
 
-Pick a clean line free channel (or a bunch of channels which does not have any RFI and does not contain the target spectral line). This would act as a reference upon which gain calibration is done, and later applied to all channels. Number of channels to be selected for averaging depends on SNR we require (if too many solutions fail and get flagged in gaincal for minsnr=5, average more channels to increase SNR). Typically, a single channel is chosen for this, however in the example below, 40 channels from channel number 300 to 339 are averaged, hence the command spw='0:300~339'. If however only a single channel, say channel number 300 were to be chosen, it would be written as spw='0:300'.
+Select a channel which is free from RFI, away from band edges and is not the channel where the spectral line is expected. We would perform gain calibration on this channel, and later applied to all channels. Number of channels to be selected for averaging depends on signal to noise ratio we require (if too many solutions fail and get flagged in gaincal for minsnr=5, average more channels to increase SNR). Typically, a single channel is chosen for this, however, in the example below, 40 channels from channel number 300 to 339 are averaged, hence the command spw='0:300~339'. If however only a single channel, say channel number 300 were to be chosen, it would be written as spw='0:300'.
 Create a directory for the solution tables, and also one for images as follows (use "!" mark at the beginning if commands are written at the casa ipython prompt):
 
 .. code-block::
@@ -401,7 +395,7 @@ Followed by ``applycal``:
    calwt=[False]
    go
 
-It is wise to keep a track of flagging percentage in the data. If too much of data gets flagged, there won't be much useful data left. The task ``flagdata`` in mode of 'summary' allows us to keep track of this. Use the following commands:
+It is wise to keep a track of flagging percentage in the data. Using the 'summary' mode in task ``flagdata``, gives us information about the fraction of data being flagged. Use the following commands:
 
 .. code-block::
 
