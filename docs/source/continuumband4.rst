@@ -12,8 +12,7 @@ CASA version used for the tutorial: 6.5.2
 Introduction
 -------------
 
-You need to have CASA installed on your machine. You also need the data to be 
-available on your disk.
+You need to have CASA installed on your machine. You also need the data to be available on your disk.
 
 From the GMRT online archive you can download data in "lta" or "FITS" format. If you downloaded the data in lta format then you will need to do the following steps to convert it to FITS format. You can download the pre-compiled binary files "listscan" and "gvfits" from the observatory. 
 
@@ -30,7 +29,8 @@ At the end of this a file with extension .log is created. The next step is to ru
    
    gvfits fileinltaformat.log 
 
-The file TEST.FITS contains your visibilities in FITS format.
+The file TEST.FITS contains your visibilities in FITS format. Before running gvfits, you can edit the fileinltaformat.log and provide a
+name of your choice in place of TEST.FITS.
 
 FITS to MS conversion
 ++++++++++++++++++++++
@@ -43,7 +43,7 @@ data from FITS to MS format. In our case the FITS file is already provided so we
 
    casa
    inp importgmrt
-   fitsfile='uGMRT-Band4.FITS'
+   fitsfile='SGRB-DATA.FITS'
    vis='multi.ms'
    go importgmrt
 
@@ -60,7 +60,7 @@ An alternative way to run the task is as follows:
 
 .. code-block::
 
-   importgmrt(fitsfile='uGMRT-Band4.FITS',vis='multi.ms')
+   importgmrt(fitsfile=''SGRB-DATA.FITS',vis='multi.ms')
 
 For the tutorial, we will follow the first method.
 
@@ -99,9 +99,13 @@ Note the scans, field ids, source names, number of channels, total bandwidth, ch
 Field ids (e. g. 0, 1, 2) can be used in subsequent task to choose sources instead of their names (e. g. 3C286, SGRB, etc.).
 
 The task ``plotms`` is used to plot the data. It opens a GUI in which you can choose to display portions of your data.
-Go through the help for plotms GUI in CASA documentation for more details on its usage **link needed**.
-It is important to make a good choice of parameters to plot so that you do not end up asking to plot too much data at the same 
-time. Our aim is to inspect the data for non-working antennas. A good choice would be to limit the fields to 
+Go through the help for plotms GUI in CASA documentation.
+
+.. admonition:: Note
+It is important to make a good choice of parameters to plot, so that you do not end up asking to plot too much data at the same 
+time - this can either lead to crashing of plotms or may take a long time to display the data. 
+
+Our aim is to inspect the data for non-working antennas. A good choice would be to limit the fields to 
 calibrators and choosing a single channel and plot Amp Vs Time and iterating over antennas. 
 Another good plot for inspection is to choose a single antenna, choose all the channels and plot Amp Vs Channel while iterating 
 over baselines.
@@ -131,7 +135,8 @@ task ``flagdata``.
 
 Here some typical steps of flagging are outlined to get you started.
 
-Usually the first spectral channel is saturated. Thus it is a good idea to flag the first spectral channel.
+Usually the first spectral channel is saturated. Thus it is a good idea to flag the first spectral channel. The input 
+'spw = 0:0' sets the choice of spectral window 0, channel number 0. 
 
 .. code-block::
 
@@ -176,11 +181,13 @@ before entering new inputs.
 In the next step we would like to flag data on antennas that were not working.
 Using ``plotms``, find out which antennas were not working. Non-working antennas *generally* show up as those having very small amplitude even on bright calibrators, show no relative change of amplitude for calibrators and target sources and the phases towards calibrator sources on any given baseline will be randomly distributed between -180 to 180 degreees. If such antennas are found in the data, those can be flagged using 
 the task ``flagdata``. 
-**Only an example is provided here - you need to locate the bad antennas in the tutorial data and flag those.** Remember also that 
-the some antennas may not be bad at all times. However if an antennas stops working while on the target source, it can be difficult to find out. Thus make a decision based on the secondary calibrator scans. Depending on when such antennas stopped working, you can choose to flag them for that duration. Check the two polarizations separately.
 
-Although ``plotms`` provides options for flagging data interactively, at this stage, we will choose to just locate the bad data and flag it
- using the task ``flagdata``.
+.. admonition:: Note
+Only an example is provided here - you need to locate the bad antennas in the tutorial data and flag those. 
+
+Remember also that the some antennas may not be bad at all times. However if an antennas stops working while on the target source, it can be difficult to find out. Thus make a decision based on the secondary calibrator scans. Depending on when such antennas stopped working, you can choose to flag them for that duration. Check the two polarizations separately.
+
+Although ``plotms`` provides options for flagging data interactively, at this stage, we will choose to just locate the bad data and flag it using the task ``flagdata``.
 
 
 .. code-block::
@@ -197,7 +204,7 @@ Although ``plotms`` provides options for flagging data interactively, at this st
 
 It is a good idea to review the inputs to the task using (``inp flagdata``) before running it.
 
-Radio Frequency Interference (RFI) are the manmade radio band signals that enter the data and are unwanted. Signals such as 
+Radio Frequency Interferences (RFI) are the manmade radio band signals that enter the data and are unwanted. Signals such as 
 those produced by satellites, aircraft communications are confined to narrow bands in the frequency and will appear as 
 frequency channels that have very high amplitudes. It is not easy to remove the RFI from such channels and recover our astronomical 
 signal. Thus we will flag the affected channels (may be individual or groups of channels). There are many ways to flag RFI - could be done manually after inspecting the spectra or using automated flaggers that look for outliers.
@@ -249,7 +256,8 @@ If we are satisfied, we could run the same task with ``action = 'apply'``.
    :align: center
    :scale: 70% 
 
-If you happen to wrongly flag and would like to restore the older flags, use the task ``flagmanager`` and then delete the wrong flags.
+.. admonition:: Note
+If you happen to wrongly flag and would like to restore the older flags, use the task ``flagmanager`` to restore the flags to the stage that you would like to by providing the versionname. Then use the task ``flagmanager`` again with the to delete the unwanted flagbackup tables.
 
 
 Now we extend the flags (growtime 80 means if more than 80% is flagged then fully flag, change if required) 
