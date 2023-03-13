@@ -18,7 +18,7 @@ You need to have CASA installed on your machine. You also need the data to be
 available on your disk.
 
 From the GMRT online archive you can download data in "lta" or "FITS" format. If you downloaded the data in lta format then you will need to do the following steps to convert it to FITS format. You can download the pre-compiled binary files "listscan" and "gvfits" from the observatory. The data can also be in "UVDATA" formate, which is a "FITS" format and hence the following steps can be used for this data type too.
-Note that the steps mentioned for file vis='example.ms' are more general, and the file mentioned for vis='0311.ms' is the particular dataset used. 
+Note that the steps mentioned for file vis='example.ms' are more general, and the file mentioned for vis='0311.ms' is the particular dataset provided. 
 
 LTA to FITS conversion
 +++++++++++++++++++++++
@@ -285,7 +285,7 @@ After flagging on field 0, repeat the same for other fields in data. The RFI spi
    inp
    mode='manual'
    vis='0311.ms'
-    savepars=True
+   savepars=True
    field='1'
    spw='0:123'
    go
@@ -597,6 +597,7 @@ Following is the amp (corrected) vs freq plot for 0311.ms field 0 of tutorial da
    :alt: Screenshot of the plotms after initial bpass and rflag
    :align: center
    :scale: 80% 
+   *Screenshot of amp(corrected) vs frequency on plotms.*
 
 Examine the bandpass table using ``plotms``. Choose the bandpass table bpass_0.bcal in data and check the plots Amp Vs Channels and Phase Vs Channels  iterated over antennas.
 
@@ -604,6 +605,7 @@ Examine the bandpass table using ``plotms``. Choose the bandpass table bpass_0.b
    :alt: Screenshot of the plotms for bandpass table
    :align: center
    :scale: 80% 
+   *Screenshot of amp(data) vs frequency for the initial bandpass solution table on plotms.*
 
 Note the shape of the band across the frequencies.
 
@@ -695,11 +697,13 @@ The bandpass solution tables in plotms looks like the following, where amp vs fr
    :alt: Screenshot of the plotms after final bpass amp vs freq
    :align: center
    :scale: 80% 
+   *Screenshot of amp(data) vs frequency for the final bandpass solution table on plotms.*
 
 .. figure:: /images/specline/finalbpass_gainphasevsfreq.png
    :alt: Screenshot of the plotms after final bpass gain phase vs freq
    :align: center
    :scale: 80% 
+   *Screenshot of gain phase(data) vs frequency for the final bandpass solution table on plotms.*
 
 
 At this point, we should be able to see the line features in plotms upon plotting the target field amp (corrected) vs channel and averaging in time, scan and baselines. This helps us determine the channel number where line is present and to choose a bunch of channels containing the entire line width to be used later in self calibration to avoid cleaning of these channels.
@@ -708,6 +712,7 @@ At this point, we should be able to see the line features in plotms upon plottin
    :alt: Screenshot of the plotms after final bpass amp (corrected) vs chan with time and baseline averaging
    :align: center
    :scale: 80%
+   *Screenshot of amp(corrected) vs frequency for the calibrated ms file with time and baseline averaging on plotms. Note the parameters set for the said averaging.*
 
 
 Splitting the calibrated target source data
@@ -793,12 +798,18 @@ Here, uvtaper parameter is found by plotting 'uvwave' vs amp in plotms for the v
    :alt: Screenshot of the plotms Amp Vs uvwave for uvtaper
    :align: center
    :scale: 80% 
+   *Screenshot of amp(data) vs uvwave for ms file to determine the uvtaper parameter on plotms.*
 
 
-Self-cal cycles: We start by cleaning the image (deconvolving) only selecting the channels which do not contain the line. This is done in the ``tclean`` by selecting spw range suitably. 
+**Self-cal cycles:** We start by cleaning the image (deconvolving) only selecting the channels which do not contain the line. This is done in the ``tclean`` by selecting spw range suitably. 
 
-The cleaning is done interactively by first masking the sources visible in the dialogue view, and running the process again using the green arrow button (continue deconvolving with current clean regions) which continues the deconvolution with current clean channels in viewer GUI. We keep adding masks to any new source visible in each step and keep deconvolving until the target source noise level is reached, i.e. until the entire image looks like noise. The deconvolution is stopped at this point by clicking the red cross button. Then a round of phase only cal is performed while selecting the same spw range and applying it to all channels. With the same parameters to task ``tclean``, folowing paramters are updated and subsequestly the phase only cal is done:
+The cleaning is done interactively by first masking the sources visible in the dialog view, and running the process again using the green arrow button (continue deconvolving with current clean regions) which continues the deconvolution with current clean channels in viewer GUI. We keep adding masks to any new source visible in each step and keep deconvolving until the target source noise level is reached, i.e. until the entire image looks like noise. The deconvolution is stopped at this point by clicking the red cross button. Then a round of phase only cal is performed while selecting the same spw range and applying it to all channels. With the same parameters to task ``tclean``, folowing paramters are updated and subsequestly the phase only cal is done:
 
+.. figure:: /images/specline/intcleandialogbox.png
+   :alt: Screenshot of the viewer dialog box GUI
+   :align: center
+   :scale: 80%
+   *Screenshot of casa viewer interactive windoow dialog menu.*
 
 .. code-block::
 
@@ -821,6 +832,7 @@ Where we have noted that the line features are within the channels 230 to 290 fo
    :alt: Screenshot of the viewer dialog GUI
    :align: center
    :scale: 80%
+   *Screenshot of casa viewer interactive windoow.*
 
 The phase only cal is performed once the viewer GUI closes automatically as follows:
 
@@ -1005,6 +1017,6 @@ Parameters like rest frequency can be given as well, with  it being the expected
 
 
 
-Acknowledgement: We thank Nissim Kanekar for providing the dataset used for this tutorial. We thank the Narendra S. for preparing the tutorial and Balpreet Kaur, Aditya Chowdhury and Ruta Kale for editing it further. 
+Acknowledgement: We thank Nissim Kanekar for providing the dataset used for this tutorial. We thank Narendra S. for preparing the tutorial and Balpreet Kaur, Aditya Chowdhury and Ruta Kale for editing it further. 
 
 
