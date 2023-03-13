@@ -37,5 +37,5 @@ dependencies.
 .. _TEMPO2: https://bitbucket.org/psrsoft/tempo2.git
 .. _CASA: https://casadocs.readthedocs.io/en/stable/
 .. _AIPS: http://www.aips.nrao.edu/index.shtml
-.. _CASA documentation: https://casadocs.readthedocs.io/en/stable/api/casatasks.html
-.. _CASA usage: https://casadocs.readthedocs.io/en/stable/notebooks/usingcasa.html
+.. _CASAdocumentation: https://casadocs.readthedocs.io/en/stable/api/casatasks.html
+.. _CASAusage: https://casadocs.readthedocs.io/en/stable/notebooks/usingcasa.html
