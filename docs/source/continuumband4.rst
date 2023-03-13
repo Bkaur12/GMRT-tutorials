@@ -595,7 +595,7 @@ To save on computation, in this example we have set wprojplanes=128. In general 
    inp tclean
    vis='SGRB-avg-split.ms'
    imagename='SGRB-img'
-   imsize=6000
+   imsize=7200
    cell='1.0arcsec'
    specmode='mfs'
    gridder='wproject'
@@ -679,7 +679,7 @@ In the next iteration we will use a larger niter and lower the threshold. In the
 
    default(tclean)
    imagename='SGRB-img1'
-   imsize=6000
+   imsize=7200
    cell='1.0arcsec'
    specmode='mfs'
    gridder='wproject'
@@ -689,7 +689,7 @@ In the next iteration we will use a larger niter and lower the threshold. In the
    nterms=2 
    weighting='briggs'
    robust=0
-   niter=2000
+   niter=4000
    threshold='1.0mJy'
    cyclefactor = 0.5 
    interactive=False
@@ -698,12 +698,11 @@ In the next iteration we will use a larger niter and lower the threshold. In the
    savemodel='modelcolumn'
    inp tclean
    go tclean
-   tclean(vis='vis-selfcal-p1.ms', imagename='SGRB-img-1', selectdata= True, field='0', spw='0', imsize=9000, cell='1.0arcsec', robust=0, weighting='briggs', specmode='mfs', nterms=2, niter=3000, usemask='auto-multithresh',minbeamfrac=0.1, smallscalebias=0.6, threshold='0.5mJy', pblimit=-1, deconvolver='mtmfs', gridder='wproject', wprojplanes=128, wbawp=False, restoration = True, savemodel='modelcolumn', cyclefactor = 0.5, parallel=False, interactive=False)
-
+   
 
 Repeat until you stop seeing improvement in the image sensitivity.
 
-.. figure:: /images/continuum/sgrb-image2.png
+.. figure:: /images/continuum/sgrb-image-selfcal.png.png
    :alt: The central part of the image produced by tclean. You can still see patterns around the sources due to the effect of the beam.
    :align: center
    :scale: 70% 
