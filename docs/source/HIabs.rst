@@ -597,6 +597,7 @@ Following is the amp (corrected) vs freq plot for 0311.ms field 0 of tutorial da
    :alt: Screenshot of the plotms after initial bpass and rflag
    :align: center
    :scale: 80% 
+   
    *Screenshot of amp(corrected) vs frequency on plotms.*
 
 Examine the bandpass table using ``plotms``. Choose the bandpass table bpass_0.bcal in data and check the plots Amp Vs Channels and Phase Vs Channels  iterated over antennas.
@@ -605,6 +606,7 @@ Examine the bandpass table using ``plotms``. Choose the bandpass table bpass_0.b
    :alt: Screenshot of the plotms for bandpass table
    :align: center
    :scale: 80% 
+   
    *Screenshot of amp(data) vs frequency for the initial bandpass solution table on plotms.*
 
 Note the shape of the band across the frequencies.
@@ -697,12 +699,14 @@ The bandpass solution tables in plotms looks like the following, where amp vs fr
    :alt: Screenshot of the plotms after final bpass amp vs freq
    :align: center
    :scale: 80% 
+   
    *Screenshot of amp(data) vs frequency for the final bandpass solution table on plotms.*
 
 .. figure:: /images/specline/finalbpass_gainphasevsfreq.png
    :alt: Screenshot of the plotms after final bpass gain phase vs freq
    :align: center
    :scale: 80% 
+   
    *Screenshot of gain phase(data) vs frequency for the final bandpass solution table on plotms.*
 
 
@@ -712,6 +716,7 @@ At this point, we should be able to see the line features in plotms upon plottin
    :alt: Screenshot of the plotms after final bpass amp (corrected) vs chan with time and baseline averaging
    :align: center
    :scale: 80%
+   
    *Screenshot of amp(corrected) vs frequency for the calibrated ms file with time and baseline averaging on plotms. Note the parameters set for the said averaging.*
 
 
@@ -798,6 +803,7 @@ Here, uvtaper parameter is found by plotting 'uvwave' vs amp in plotms for the v
    :alt: Screenshot of the plotms Amp Vs uvwave for uvtaper
    :align: center
    :scale: 80% 
+   
    *Screenshot of amp(data) vs uvwave for ms file to determine the uvtaper parameter on plotms.*
 
 
@@ -809,6 +815,7 @@ The cleaning is done interactively by first masking the sources visible in the d
    :alt: Screenshot of the viewer dialog box GUI
    :align: center
    :scale: 80%
+   
    *Screenshot of casa viewer interactive windoow dialog menu.*
 
 .. code-block::
@@ -832,6 +839,7 @@ Where we have noted that the line features are within the channels 230 to 290 fo
    :alt: Screenshot of the viewer dialog GUI
    :align: center
    :scale: 80%
+   
    *Screenshot of casa viewer interactive windoow.*
 
 The phase only cal is performed once the viewer GUI closes automatically as follows:
