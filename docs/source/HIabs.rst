@@ -6,8 +6,7 @@ Spectral line  data reduction using CASA
 The tutorial is intended to provide you an introduction to the basic steps involved in 
 the analysis of spectral line data from the GMRT. 
 We will be using a band-4 (550 - 750 MHz) dataset. 
-In a targeted spectral line observation, one is already aware of the location of the line 
-in terms of frequency and the corresponding spectral channels. 
+In a targeted spectral line observation, we know the line frequency and the corresponding spectral channels. 
 
 CASA version used for the tutorial: 6.5.2
 
@@ -17,8 +16,8 @@ Introduction
 You need to have CASA installed on your machine. You also need the data to be 
 available on your disk.
 
-From the GMRT online archive you can download data in "lta" or "FITS" format. If you downloaded the data in lta format then you will need to do the following steps to convert it to FITS format. You can download the pre-compiled binary files "listscan" and "gvfits" from the observatory. The data can also be in "UVDATA" formate, which is a "FITS" format and hence the following steps can be used for this data type too.
-Note that the steps mentioned for file vis='example.ms' are more general, and the file mentioned for vis='0311.ms' is the particular dataset used. 
+From the GMRT online archive you can download data in "lta" or "FITS" format. If you downloaded the data in lta format then you will need to do the following steps to convert it to the FITS format. You can download the pre-compiled binary files "listscan" and "gvfits" from the observatory. The data can also be in "UVDATA" format, which is a "FITS" format and hence the following steps can also be used for this data type.
+Note that the steps mentioned for file vis='example.ms' are more general. For this tutorial, we will be using the dataset '0311.ms'. 
 
 LTA to FITS conversion
 +++++++++++++++++++++++
@@ -37,7 +36,7 @@ For the LTA file name test.lta, the conversion is done using following command:
    ./listscan test.lta
 
 
-At the end of this, a file with extension .log is created. Using an editor like vi or gedit one can add the file name for the fits file. The next step is to run gvfits on this file.
+This command will create a file with extension .log. Using an editor like vi or gedit one can add the file name for the fits file. The next step is to run gvfits on this file.
 
 .. code-block:: 
    
