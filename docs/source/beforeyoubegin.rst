@@ -11,7 +11,7 @@ We will focus on the analysis using CASA in these tutorials.
 CASA
 ~~~~~
 
-You need to download and install CASA. It is important to read the `CASA documentation`_ in order to understand the details of the CASA tasks and the overall functioning of CASA. It will be useful to get familiar with the `CASA usage`_ at the ipython prompt before 
+You need to download and install CASA. It is important to read the CASA `documentation`_ in order to understand the details of the CASA tasks and the overall functioning of CASA. It will be useful to get familiar with the `usage`_ at the ipython prompt before 
 starting the tutorials. The specific CASA version in which the tutorial was prepared is provided at the beginning 
 of the individual tutorials.
 
@@ -37,5 +37,5 @@ dependencies.
 .. _TEMPO2: https://bitbucket.org/psrsoft/tempo2.git
 .. _CASA: https://casadocs.readthedocs.io/en/stable/
 .. _AIPS: http://www.aips.nrao.edu/index.shtml
-.. _CASAdocumentation: https://casadocs.readthedocs.io/en/stable/api/casatasks.html
-.. _CASAusage: https://casadocs.readthedocs.io/en/stable/notebooks/usingcasa.html
+.. _documentation: https://casadocs.readthedocs.io/en/stable/api/casatasks.html
+.. _usage: https://casadocs.readthedocs.io/en/stable/notebooks/usingcasa.html
