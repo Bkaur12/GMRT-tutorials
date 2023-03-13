@@ -18,7 +18,7 @@ You need to have CASA installed on your machine. You also need the data to be
 available on your disk.
 
 From the GMRT online archive you can download data in "lta" or "FITS" format. If you downloaded the data in lta format then you will need to do the following steps to convert it to FITS format. You can download the pre-compiled binary files "listscan" and "gvfits" from the observatory. The data can also be in "UVDATA" formate, which is a "FITS" format and hence the following steps can be used for this data type too.
-Note that the steps mentioned for file vis='example.ms' are more general, and the file mentioned for vis='0311.ms' is the particular dataset provided. 
+Note that the steps mentioned for file vis='example.ms' are more general, and the file mentioned for vis='0311.ms' is the particular dataset used. 
 
 LTA to FITS conversion
 +++++++++++++++++++++++
@@ -76,21 +76,11 @@ An alternative way to run the task is as follows:
 
    importgmrt(fitsfile='0311.UVDATA',vis='0311.ms')
 
-For the tutorial, we will follow the first method. Note that instead of "tget importgmrt", the command "inp importgmrt" would also work, based on the version of CASA you are using. For the later case, to run the command, instead of "go", the command "go importgmrt" is used.
+For the tutorial, we will follow the first method. Note that instead of "tget importgmrt", the command "inp importgmrt" would also work, based on the version of CASA you are using.
 
 The MS format stores the visibility data in the form of a table. The *data* column contains the data. Operations 
 like calibration and deconvolution will produce additional columns such as the *corrected* and *model* data columns.
 
-There can be cases where the data file contains multiple observations with two or more targets. In this case, we may wish to split the dataset containing only the target we are interested in along with the calibrators related to it. For example, if we would like to split thefields ids 0,1,2 and 7 with channels from 1403 to 3450, it is done as follows:
-
-.. code-block::
-
-   tget split
-   vis=’example.ms’
-   outputvis='examplesplit.ms’
-   field=’0,1,2,7’
-   spw=’0:1403∼3450’
-   go 
 
 Data inspection
 ----------------
@@ -120,10 +110,23 @@ You can also choose to save the output to a text file so that you can refer to i
    listfile='listobs-out.txt' 
    go 
 
-Note the scans, field ids, source names, number of channels, total bandwidth, channel width and central frequency for your observations. Identify the science target, flux calibrators and the phase calibrator.
-Field ids (e. g. 0, 1, 2) can be used in subsequent task to choose sources instead of their names (e. g. 3C48, 0311+430, etc.). In the tutorial dataset presented, no phase calibrator was used, as the target itself is bright. Hence only a flux calibrator and the target is present, with field id 0 and 1 respectively. Also note that in this tutorial the steps are shown for data where a phase calibrator is also present. **Hence the steps related to phase calibrator operation should be skipped while reducing the sample data provided in the school.**
+Note the scans, field ids, source names, number of channels, total bandwidth, channel width and central frequency for your observations. Identify the science target, flux calibrators(s) and the phase calibrator(s).
+Both field IDs (e.g. 0,1,2) and names (e.g. 3C48, 0311+430, etc.) can be used in subsequent tasks to select on the corresponding sources.In the tutorial dataset presented, no phase calibrator was used, as the target itself is bright. Hence only a flux calibrator and the target is present, with field id 0 and 1 respectively. Also note that in this tutorial the steps are shown for data where a phase calibrator is also present. **Hence the steps related to phase calibrator operation should be skipped while reducing the sample data provided in the school.**
 
-Using online database like NASA NED or SIMBAD we learn more about the target like its type, redshift, etc. From the redshift value, we can determine the frequency at which we expect the spectral line to be present. In the tutorial dataset given, the target 0311+430, also known as 3C 082 (can be found from NED) is a Quasar with a redshift of z=2.87. From this, using f' = fo/(1+z), where fo is the rest frequecny of line, 1420 MHz we get the frequency at which the line should be. Note that this is case where the absorbing (or emitting gas) is close to the background target. If the gas is present somewhere between us and the target, we won't be able to locate the frequency of the line in this way; as can be seen in the data set provided, the line doesn't lie at calculated frequency. 
+There can be cases where the data file contains multiple observations with two or more targets. In this case, we may wish to split the dataset containing only the target we are interested in along with the calibrators related to it. For example, if we would like to split the field ids 0,1,2 and 7 with channels from 1403 to 3450, it is done as follows:
+
+.. code-block::
+
+   tget split
+   vis=’example.ms’
+   outputvis='examplesplit.ms’
+   field=’0,1,2,7’
+   spw=’0:1403∼3450’
+   go 
+
+
+Using online database like NASA NED or SIMBAD we learn more about the target like its type, redshift, etc. From the redshift value, we can determine the frequency at which we expect the spectral line to be present. In the tutorial dataset given, the target 0311+430, also known as 3C 082 (can be found from NED) is a Quasar with a redshift of z=2.87. From this, using f' = fo/(1+z), where fo is the rest frequecny of line, 1420 MHz we get the frequency at which the line should be. Note that this is case where the absorbing (or emitting gas) is close to the background target. 
+If the gas is present somewhere between us and the target, we won't be able to locate the frequency of the line in this way; as can be seen in the provided data set, the line doesn't lie at calculated frequency. 
 
 The task ``plotms`` is used to plot the data. It opens a GUI in which you can choose to display portions of your data.
 Go through the help for plotms GUI in CASA documentation for more details on its usage **link needed**.
@@ -285,7 +288,7 @@ After flagging on field 0, repeat the same for other fields in data. The RFI spi
    inp
    mode='manual'
    vis='0311.ms'
-   savepars=True
+    savepars=True
    field='1'
    spw='0:123'
    go
@@ -597,8 +600,6 @@ Following is the amp (corrected) vs freq plot for 0311.ms field 0 of tutorial da
    :alt: Screenshot of the plotms after initial bpass and rflag
    :align: center
    :scale: 80% 
-   
-   *Screenshot of amp(corrected) vs frequency on plotms.*
 
 Examine the bandpass table using ``plotms``. Choose the bandpass table bpass_0.bcal in data and check the plots Amp Vs Channels and Phase Vs Channels  iterated over antennas.
 
@@ -606,8 +607,6 @@ Examine the bandpass table using ``plotms``. Choose the bandpass table bpass_0.b
    :alt: Screenshot of the plotms for bandpass table
    :align: center
    :scale: 80% 
-   
-   *Screenshot of amp(data) vs frequency for the initial bandpass solution table on plotms.*
 
 Note the shape of the band across the frequencies.
 
@@ -699,15 +698,11 @@ The bandpass solution tables in plotms looks like the following, where amp vs fr
    :alt: Screenshot of the plotms after final bpass amp vs freq
    :align: center
    :scale: 80% 
-   
-   *Screenshot of amp(data) vs frequency for the final bandpass solution table on plotms.*
 
 .. figure:: /images/specline/finalbpass_gainphasevsfreq.png
    :alt: Screenshot of the plotms after final bpass gain phase vs freq
    :align: center
    :scale: 80% 
-   
-   *Screenshot of gain phase(data) vs frequency for the final bandpass solution table on plotms.*
 
 
 At this point, we should be able to see the line features in plotms upon plotting the target field amp (corrected) vs channel and averaging in time, scan and baselines. This helps us determine the channel number where line is present and to choose a bunch of channels containing the entire line width to be used later in self calibration to avoid cleaning of these channels.
@@ -716,8 +711,6 @@ At this point, we should be able to see the line features in plotms upon plottin
    :alt: Screenshot of the plotms after final bpass amp (corrected) vs chan with time and baseline averaging
    :align: center
    :scale: 80%
-   
-   *Screenshot of amp(corrected) vs frequency for the calibrated ms file with time and baseline averaging on plotms. Note the parameters set for the said averaging.*
 
 
 Splitting the calibrated target source data
@@ -803,20 +796,12 @@ Here, uvtaper parameter is found by plotting 'uvwave' vs amp in plotms for the v
    :alt: Screenshot of the plotms Amp Vs uvwave for uvtaper
    :align: center
    :scale: 80% 
-   
-   *Screenshot of amp(data) vs uvwave for ms file to determine the uvtaper parameter on plotms.*
 
 
-**Self-cal cycles:** We start by cleaning the image (deconvolving) only selecting the channels which do not contain the line. This is done in the ``tclean`` by selecting spw range suitably. 
+Self-cal cycles: We start by cleaning the image (deconvolving) only selecting the channels which do not contain the line. This is done in the ``tclean`` by selecting spw range suitably. 
 
-The cleaning is done interactively by first masking the sources visible in the dialog view, and running the process again using the green arrow button (continue deconvolving with current clean regions) which continues the deconvolution with current clean channels in viewer GUI. We keep adding masks to any new source visible in each step and keep deconvolving until the target source noise level is reached, i.e. until the entire image looks like noise. The deconvolution is stopped at this point by clicking the red cross button. Then a round of phase only cal is performed while selecting the same spw range and applying it to all channels. With the same parameters to task ``tclean``, folowing paramters are updated and subsequestly the phase only cal is done:
+The cleaning is done interactively by first masking the sources visible in the dialogue view, and running the process again using the green arrow button (continue deconvolving with current clean regions) which continues the deconvolution with current clean channels in viewer GUI. We keep adding masks to any new source visible in each step and keep deconvolving until the target source noise level is reached, i.e. until the entire image looks like noise. The deconvolution is stopped at this point by clicking the red cross button. Then a round of phase only cal is performed while selecting the same spw range and applying it to all channels. With the same parameters to task ``tclean``, folowing paramters are updated and subsequestly the phase only cal is done:
 
-.. figure:: /images/specline/intcleandialogbox.png
-   :alt: Screenshot of the viewer dialog box GUI
-   :align: center
-   :scale: 80%
-   
-   *Screenshot of casa viewer interactive windoow dialog menu.*
 
 .. code-block::
 
@@ -839,8 +824,6 @@ Where we have noted that the line features are within the channels 230 to 290 fo
    :alt: Screenshot of the viewer dialog GUI
    :align: center
    :scale: 80%
-   
-   *Screenshot of casa viewer interactive windoow.*
 
 The phase only cal is performed once the viewer GUI closes automatically as follows:
 
@@ -1025,6 +1008,6 @@ Parameters like rest frequency can be given as well, with  it being the expected
 
 
 
-Acknowledgement: We thank Nissim Kanekar for providing the dataset used for this tutorial. We thank Narendra S. for preparing the tutorial and Balpreet Kaur, Aditya Chowdhury and Ruta Kale for editing it further. 
+Acknowledgement: We thank Nissim Kanekar for providing the dataset used for this tutorial. We thank the Narendra S. for preparing the tutorial and Balpreet Kaur, Aditya Chowdhury and Ruta Kale for editing it further. 
 
 
