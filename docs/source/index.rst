@@ -16,7 +16,7 @@ You can learn GMRT data analysis using the tutorials provided here.
    beforeyoubegin
    introtogmrtdata
    continuumband4
-   HIabs
+   HIabsv0
    pulsar
    capturep
 
