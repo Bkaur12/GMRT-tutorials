@@ -606,10 +606,11 @@ To save on computation, in this example we have set wprojplanes=128. In general 
    weighting='briggs'
    robust=0
    niter=2000
-   threshold='1.0mJy'
+   threshold='0.01mJy'
    cyclefactor = 0.5 
    interactive=False
    usemask='auto-multithresh'
+   sidelobethreshold=2.0
    pbmask=0.0
    savemodel='modelcolumn'
    inp tclean
@@ -690,10 +691,11 @@ In the next iteration we will use a larger niter and lower the threshold. In the
    weighting='briggs'
    robust=0
    niter=4000
-   threshold='1.0mJy'
+   threshold='0.01mJy'
    cyclefactor = 0.5 
    interactive=False
    usemask='auto-multithresh'
+   sidelobethreshold=2.0
    pbmask=0.0
    savemodel='modelcolumn'
    inp tclean
