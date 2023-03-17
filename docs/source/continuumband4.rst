@@ -600,7 +600,7 @@ To save on computation, in this example we have set wprojplanes=128. In general 
    specmode='mfs'
    gridder='wproject'
    wprojplanes=128 
-   pblimit=0.0001
+   pblimit=-0.0001
    deconvolver='mtmfs'
    nterms=2 
    weighting='briggs'
@@ -685,7 +685,7 @@ In the next iteration we will use a larger niter and lower the threshold. In the
    specmode='mfs'
    gridder='wproject'
    wprojplanes=128 
-   pblimit=0.0001
+   pblimit=-0.0001
    deconvolver='mtmfs'
    nterms=2 
    weighting='briggs'
