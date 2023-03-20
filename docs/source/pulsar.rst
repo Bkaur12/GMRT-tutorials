@@ -81,3 +81,6 @@ the given fiducial parameters.
 .. include:: psrsearchb3.rst
 
 .. include:: psrtiming_tutorial.rst
+
+
+Acknowledgements and Credits: 
