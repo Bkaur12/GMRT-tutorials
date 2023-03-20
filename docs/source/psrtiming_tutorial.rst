@@ -8,7 +8,7 @@ The tutorial is intended to provide you an introduction to the basic steps relat
 We will use PSRCHIVE and TEMPO2 Softwares.
 
 Introduction
-+++++++++++++
+~~~~~~~~~~~~~
 
 The GMRT beam data is in binary format and is converted to "filterbank" format (same binary file with a header). The "filterbank" is folded based on pulsar ephemeris, yielding three-dimensional (time, frequency, phase) folded pulsar data ("pfd"). For this tutorial, we will begin with "pfd" files.
 
@@ -78,8 +78,7 @@ Understanding the pattern in the residuals caused by parameter error will assist
 Time to solve a Newly Discovered Pulsar
 ++++++++++++++++++++++++++++++++++++++++
 
-This time we will start with the real GMRT data set for a newly discovered pulsar J1244-4708 which is discovered in the GMRT High Resolution Southern Sky Survey 
-.. _ (http://www.ncra.tifr.res.in/~bhaswati/GHRSS.html).
+This time we will start with the real GMRT data set for a newly discovered pulsar J1244-4708 which is discovered in the GMRT High Resolution Southern Sky Survey. 
 
 This pulsar was localised through imaging of a single observational epoch which provides us with its RA and DEC which are accurate to a few arc-seconds. The F0 and DM values of the pulsar were estimated using data from an epoch observation in which the pulsar was strongly detected. We used the reciprocal of the period value (in seconds) given in the waterfall plot of that observation to calculate F0. Similarly, from the same plot, we noted the DM and epoch of the observation. Using these values, we created a parameter file for this pulsar (in this case, J1244-4708.par) that contains an initial guess of its parameters.
 
