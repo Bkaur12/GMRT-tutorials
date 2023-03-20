@@ -16,7 +16,7 @@ You need to have PSRCHIVE and TEMPO2 installed on your machine. You also need th
 available on your disk.
 
 Prediction of phases of pulsar using TEMPO2
-++++++++++++++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Right Ascension (RA) and Declination (DEC) provide the source's two-dimensional position in the sky, which is typically defined by the J2000 system. The pulsar's spin frequency (F0) is defined as the reciprocal of its spining period. F1 is the first derivative of spin frequency with respect to time. Since the pulsar slows down over time, F1 has a negative value. The dispersion measure (DM) quantifies the line of sight column density of electrons. All of these parameters are listed in a file called the pulsar's parameter file. Let's start with a parameter file of pulsar J1646-2142, which contains the pulsar's name, RA, DEC, F0, F1, and DM values.
 
@@ -45,7 +45,7 @@ Normally, the first column represents the file name; in this case, it is the sam
 
 
 The impact of parameter errors on timing data
-++++++++++++++++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 First check the phases of the pulsar are derived accurately by running the command:
 
@@ -76,7 +76,7 @@ Try the same thing again with error in F1, and this time you'll notice a parabo
 Understanding the pattern in the residuals caused by parameter error will assist us in solving a newly discovered pulsar. Once accurate (phase-coherent) solutions for a pulsar are obtained, one can establish its clock-like behaviour and predict its phases at any point in time.
  
 Time to solve a Newly Discovered Pulsar
-++++++++++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This time we will start with the real GMRT data set for a newly discovered pulsar J1244-4708 which is discovered in the GMRT High Resolution Southern Sky Survey. 
 
@@ -91,7 +91,8 @@ This pulsar was localised through imaging of a single observational epoch which
 In this exercise, we will use GMRT's incoherent array (IA) beam data. This pulsar has been observed 13 times over a baseline of 9 months. The GMRT IA beam data is first converted to "filterbank" format, then dedispersed and folded to "pfd" format. We'll start with the "pfd" files right away.
 
 Time of arrival estimation
-++++++++++++++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 The "pfd.ps" files contain waterfall plots for all "pfd" files. The first step is to go through all of the profiles and find the cleanest one with the sufficiently bright integrated pulse. We will use that profile as our reference or template profile, assuming it is the true profile of the pulsar. Use the following command to view all the profiles.
 
 .. code-block::

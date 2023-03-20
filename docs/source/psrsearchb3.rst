@@ -12,7 +12,7 @@ Introduction
 Pulsars are fascinating extraterrestrial objects that produce pulse like emission with very precise periodicity. These objects are often detected in time domain radio observations. In this tutorial, we will learn how to search for these objects using the strengths of individual pulsed emission as well as their precise periodic behaviour. This tutorial will require PRESTO installed on your machine along with a filterbank file with pulsar in it.
  
 Checking filterbank file
-++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Filterbank file is a file-format for beam data from radio telescopes. This file has the metadata of the observation along with the raw beamdata recorded in the telescope. Use following syntax to check the metadata,
 
@@ -26,7 +26,7 @@ Filterbank file is a file-format for beam data from radio telescopes. This file 
    *Example of a filterbank header*
 
 Dedispersion
-+++++++++++++++++++++++
+~~~~~~~~~~~~~
 
 For an unknown pulsar, we don't know the dispersion caused by the intersteller medium. We try a lot of trial DM values and perform search in each dedispersed time series. We will use ``prepsubband`` to dedisperse the filterbank file at a range of trial DM values,
 
@@ -38,7 +38,7 @@ Please note that number of output samples should be an even number (in order to 
 
 
 Exploring the time series
-+++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Now, since we have the dedispersed time series, we can try to visualize the pulses in the time series. Use ``exploredat`` to visualize the time series,
 
@@ -59,7 +59,7 @@ You can even try to estimate the period of the repeating signal from this plot.
 
 
 Single pulse search
-+++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~
 
 Though we have seen the single pulses from the pulsar directly in the time series, there is a formal way to search for single pulses in the time series. 
 
@@ -102,7 +102,7 @@ You can note down timestamp of some strong pulses from the text file and try to 
    
   
 Search for faint pulsars using periodicity search
-+++++++++++++++++++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 There are pulsars that are weak and can not be seen in single pulses. To recover such puslars, we use their periodic property to get a good indication of their presence in the time series. Here, we will see one such method called FFT based periodicity search. The process is to take Fourier transform of the time series and search for strong signal in the power spectra. 
 First we will see how FFT of a time series with repeating signal looks like. To compute the FFT of the time series,
@@ -144,7 +144,7 @@ This will generate a text file containing the results of the search.
    *Result of accelsearch. First detection is the first harmonic of the pulsar signal.*
 
 Folding filterbank file
-+++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 Once we know the correct period and DM of the pulsar, we can fold the filterbank file to generate characteristic plots of the pulsar. We use ``prepfold`` to fold a filterbank,
 
