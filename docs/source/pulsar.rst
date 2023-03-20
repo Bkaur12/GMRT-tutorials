@@ -40,17 +40,17 @@ partial averaging over time, etc.)
 
    waterfaller.py inputFile.fil -d 0 --subdm 0 --show-ts -s 64 -T 0 -t 5
 
+.. figure:: /images/pulsar/wfaller1.png
+   :alt: waterfall 0-DM
+   :align: center
+   :scale: 70% 
+
 The single pulses from a reasonably strong pulsars might be visible after dedispersing
 the data at correct dispersion measure (DM).
 
 .. code-block::
 
    waterfaller.py inputFile.fil -d <DM> --subdm <DM> --show-ts -s 64 -T 0 -t 5
-
-.. figure:: /images/pulsar/wfaller1.png
-   :alt: waterfall 0-DM
-   :align: center
-   :scale: 70% 
 
 .. figure:: /images/pulsar/wfaller2.png
    :alt: waterfall correct-DM
