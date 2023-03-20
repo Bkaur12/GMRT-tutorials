@@ -78,4 +78,4 @@ the given fiducial parameters.
 
 
 
-
+.. include:: psrsearchb3.rst

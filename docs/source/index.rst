@@ -18,7 +18,6 @@ You can learn GMRT data analysis using the tutorials provided here.
    continuumband4
    HIabsv0
    pulsar
-   psrsearchb3.rst
    capturep
 
 
