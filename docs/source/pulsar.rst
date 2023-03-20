@@ -19,6 +19,7 @@ the ``readfile`` command from PRESTO (an example using the ``header`` command fr
 SIGPROC will be shown later).
 
 .. code-block::
+
    readfile inputFile.fil
 
 .. figure:: /images/pulsar/headerintro.png
@@ -36,12 +37,14 @@ and frequency, e.g., using the ``waterfaller.py`` command from PRESTO. The comma
 partial averaging over time, etc.)
 
 .. code-block::
+
    waterfaller.py inputFile.fil -d 0 --subdm 0 --show-ts -s 64 -T 0 -t 5
 
 The single pulses from a reasonably strong pulsars might be visible after dedispersing
 the data at correct dispersion measure (DM).
 
 .. code-block::
+
    waterfaller.py inputFile.fil -d <DM> --subdm <DM> --show-ts -s 64 -T 0 -t 5
 
 .. figure:: /images/pulsar/wfaller1.png
@@ -50,7 +53,7 @@ the data at correct dispersion measure (DM).
    :scale: 70% 
 
 .. figure:: /images/pulsar/wfaller2.png
-   :alt: waterfall 0-DM
+   :alt: waterfall correct-DM
    :align: center
    :scale: 70% 
 
@@ -62,13 +65,14 @@ as seen above. To dedisperse the whole data and also fold it over the rotation p
 of the pulsar, we can use ``prepdata`` from PRESTO.
 
 .. code-block::
+
    prepfold -p 3.7452943 -dm 50.9 -topo -n 128 -nosearch  introTestd4.fil
 
 ``prepfold`` is a powerful command, it can search for the most optimum parameters around
 the given fiducial parameters.
 
 .. figure:: /images/pulsar/prepout.png
-   :alt: waterfall 0-DM
+   :alt: prepfold output
    :align: center
    :scale: 70% 
 
