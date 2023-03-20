@@ -713,7 +713,10 @@ Repeat until you stop seeing improvement in the image sensitivity.
 
 After you get your final image you need to do a primary beam correction. The task "widebandpbcor" in CASA does not have the information of the GMRT primary beam shape. A modified version of this task called `ugmrtpb`_ has been written for the uGMRT primary beam correction. You can follow the instructions there to do a primary beam correction for your image.
 
+For this tutorial on the RAS machines please see the steps `here`_.
+
 Acknowledgements: We thank Ishwara Chandra who provided the data used in the Radio Astronomy School for the CASA tutorial. We also thank Nissim Kanekar and Ruta Kale who helped make the first version of this tutorial. The original tutorial has been converted to html by Ruta Kale with help from Shilkumar Meshram. 
 
 .. _ugmrtpb: https://github.com/ruta-k/uGMRTprimarybeam-CASA6
+.. _here: http://www.ncra.tifr.res.in/~ruta/files/pbcor-notes.txt
 
