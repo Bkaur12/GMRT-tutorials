@@ -83,4 +83,12 @@ the given fiducial parameters.
 .. include:: psrtiming_tutorial.rst
 
 
-Acknowledgements and Credits: 
+Acknowledgements and Credits
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The **Searching for new pulsars** and **Timing of pulsars** sections of
+the tutorial were entirely contributed by Shubham Singh and Shyam Sunder,
+respectively. The data sets used in these parts were kindly provided by
+Dr. Jayanta Roy and Dr. Bhaswati Bhattacharyya. Yogesh Maan is responsible
+for the overall pulsar tutorial coordination as well as for making available
+the data used in the **Introduction** section.
