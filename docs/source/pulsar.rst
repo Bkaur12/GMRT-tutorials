@@ -84,7 +84,7 @@ the given fiducial parameters.
 
 
 Acknowledgements and Credits
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-----------------------------
 
 The **Searching for new pulsars** and **Timing of pulsars** sections of
 the tutorial were entirely contributed by Shubham Singh and Shyam Sunder,
