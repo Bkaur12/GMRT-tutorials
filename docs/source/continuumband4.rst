@@ -718,5 +718,5 @@ For this tutorial on the RAS machines please see the steps `here`_.
 Acknowledgements: We thank Ishwara Chandra who provided the data used in the Radio Astronomy School for the CASA tutorial. We also thank Nissim Kanekar and Ruta Kale who helped make the first version of this tutorial. The original tutorial has been converted to html by Ruta Kale with help from Shilkumar Meshram. 
 
 .. _ugmrtpb: https://github.com/ruta-k/uGMRTprimarybeam-CASA6
-.. _here: http://www.ncra.tifr.res.in/~ruta/files/pbcor-notes.txt
+.. _here: http://www.ncra.tifr.res.in/~ruta/files/ugmrtpb_install.txt
 
