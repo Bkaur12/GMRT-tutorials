@@ -57,11 +57,11 @@ data from FITS to MS format. In our case the FITS file is already provided as "U
    casa
    tget importgmrt
    inp
-   fitsfile='0311.UVDATA'
-   vis='0311.ms'
+   fitsfile='1543+480.FITS'
+   vis='1543+480.ms'
    go 
 
-The output file *0311.ms* file will contain your visibilities in MS format.
+The output file *1543+480.ms* file will contain your visibilities in MS format.
 
 .. figure:: /images/specline/importgmrtlog.png
    :alt: Importgmrt log
@@ -74,14 +74,14 @@ An alternative way to run the task is as follows:
 
 .. code-block::
 
-   importgmrt(fitsfile='0311.UVDATA',vis='0311.ms')
+   importgmrt(fitsfile='1543+480.FITS',vis='1543+480.ms')
 
-For the tutorial, we will follow the first method. Note that instead of "tget importgmrt", the command "inp importgmrt" would also work, based on the version of CASA you are using. For the later case, to run the command, instead of "go", the command "go importgmrt" is used.
+For the tutorial, we will follow the first method. Note that instead of "tget importgmrt", the command "inp importgmrt" would also work based on the version of CASA you are using. For the later case, to run the command, instead of "go", the command "go importgmrt" should be used.
 
 The MS format stores the visibility data in the form of a table. The *data* column contains the data. Operations 
 like calibration and deconvolution will produce additional columns such as the *corrected* and *model* data columns.
 
-There can be cases where the data file contains multiple observations with two or more targets. In this case, we may wish to split the dataset containing only the target we are interested in along with the calibrators related to it. For example, if we would like to split thefields ids 0,1,2 and 7 with channels from 1403 to 3450, it is done as follows:
+(Bonus) There can be cases where the data file contains multiple observations with two or more targets. In this case, we may wish to split the dataset containing only the target we are interested in, along with the calibrators related to it. For example, if we would like to split the fields ids 0,1,2 and 7 with channels from 1403 to 3450, it is done as follows:
 
 .. code-block::
 
@@ -101,7 +101,7 @@ The task listobs will provide a summary of the contents of your dataset in the l
 .. code-block::
 
    tget listobs
-   vis='0311.ms'
+   vis='1543+480.ms'
    go 
 
 .. figure:: /images/specline/listobslog.png
@@ -116,21 +116,19 @@ You can also choose to save the output to a text file so that you can refer to i
 .. code-block::
 
    tget listobs
-   vis='0311.ms'
+   vis='1543+480.ms'
    listfile='listobs-out.txt' 
    go 
 
-Note the scans, field ids, source names, number of channels, total bandwidth, channel width and central frequency for your observations. Identify the science target, flux calibrators and the phase calibrator.
-Field ids (e. g. 0, 1, 2) can be used in subsequent task to choose sources instead of their names (e. g. 3C48, 0311+430, etc.). In the tutorial dataset presented, no phase calibrator was used, as the target itself is bright. Hence only a flux calibrator and the target is present, with field id 0 and 1 respectively. Also note that in this tutorial the steps are shown for data where a phase calibrator is also present. **Hence the steps related to phase calibrator operation should be skipped while reducing the sample data provided in the school.**
+Note the scans, field IDs, source names, number of channels, total bandwidth, channel width and central frequency for your observations. Identify the science target, its corresponding flux calibrators and the phase calibrator.
+Field IDs can be used in subsequent tasks to choose sources instead of their names (e.g., 3C48, 0311+430, etc.). In the tutorial dataset presented, a flux calibrator (3C286), phase calibrator (1602+334), and target (1543+480) are present, with field id 0, 1 and 2, respectively. 
 
-Using online database like NASA NED or SIMBAD we learn more about the target like its type, redshift, etc. From the redshift value, we can determine the frequency at which we expect the spectral line to be present. In the tutorial dataset given, the target 0311+430, also known as 3C 082 (can be found from NED) is a Quasar with a redshift of z=2.87. From this, using f' = fo/(1+z), where fo is the rest frequecny of line, 1420 MHz we get the frequency at which the line should be. Note that this is case where the absorbing (or emitting gas) is close to the background target. If the gas is present somewhere between us and the target, we won't be able to locate the frequency of the line in this way; as can be seen in the data set provided, the line doesn't lie at calculated frequency. 
+Using online databases like NASA NED or SIMBAD, we learn more about the target, for instance, its type, redshift, etc. From the redshift value, we can determine the frequency at which we expect the spectral line to be present. In the tutorial dataset given, the target 1543+480, also known as WISEA J154508.52+475154.6 (can be found from NED), is a Quasar (QSO) at a redshift of z=1.277. From this, using f' = fo/(1+z), where fo is the rest frequency of the line, 1420 MHz, we get the frequency at which the line should be. Note that this is a case where the absorbing (or emitting gas) is close to the background source. If the gas is present somewhere between us and the source/target, we won't be able to locate the frequency of the line in this way, as the redshift of the gas would be unknown.
 
 The task ``plotms`` is used to plot the data. It opens a GUI in which you can choose to display portions of your data.
-Go through the help for plotms GUI in CASA documentation for more details on its usage **link needed**.
-It is important to make a good choice of parameters to plot so that you do not end up asking to plot too much data at the same 
-time. Our aim is to inspect the data for non-working antennas. A good choice would be to limit the fields to 
-calibrators and choosing a single channel and plot Amp Vs Time and iterating over antennas. 
-Another good plot for inspection is to choose a single antenna, choose all the channels and plot Amp Vs Channel while iterating 
+Go through the help for plotms GUI in CASA documentation for more details on its usage (https://casadocs.readthedocs.io/en/v6.2.0/api/tt/casatasks.visualization.plotms.html).
+It is important to make a good choice of parameters to plot so that you do not end up asking to plot too much data simultaneously. Our aim is to inspect the data for non-working antennas. A good choice would be to limit the fields to calibrators, choosing a single channel plotting Amp vs. time, and iterating over antennas. 
+Another good plot for inspection is to choose a single antenna, select all the channels and plotting Amp vs. channel while iterating 
 over baselines.
 
 .. admonition:: Note
