@@ -120,10 +120,10 @@ You can also choose to save the output to a text file so that you can refer to i
    listfile='listobs-out.txt' 
    go 
 
-Note the scans, field IDs, source names, number of channels, total bandwidth, channel width and central frequency for your observations. Identify the science target, its corresponding flux calibrators and the phase calibrator.
+Note the scans, field IDs, source names, number of channels, total bandwidth, channel width and central frequency for your observations. Identify the science target, its corresponding flux calibrators and the phase calibrator. In the tutorial dataset, there are 512 channels in the band from 608 MHz to 641 MHz, giving a spectral resolution of 65.1 KHz.  
 Field IDs can be used in subsequent tasks to choose sources instead of their names (e.g., 3C48, 0311+430, etc.). In the tutorial dataset presented, a flux calibrator (3C286), phase calibrator (1602+334), and target (1543+480) are present, with field id 0, 1 and 2, respectively. 
 
-Using online databases like NASA NED or SIMBAD, we learn more about the target, for instance, its type, redshift, etc. From the redshift value, we can determine the frequency at which we expect the spectral line to be present. In the tutorial dataset given, the target 1543+480, also known as WISEA J154508.52+475154.6 (can be found from NED), is a Quasar (QSO) at a redshift of z=1.277. From this, using f' = fo/(1+z), where fo is the rest frequency of the line, 1420 MHz, we get the frequency at which the line should be. Note that this is a case where the absorbing (or emitting gas) is close to the background source. If the gas is present somewhere between us and the source/target, we won't be able to locate the frequency of the line in this way, as the redshift of the gas would be unknown.
+Using online databases like NASA NED or SIMBAD, we learn more about the target, for instance, its type, redshift, etc. From the redshift value, we can determine the frequency at which we expect the spectral line to be present. In the tutorial dataset given, the target 1543+480, also known as WISEA J154508.52+475154.6 (can be found from NED), is a Quasar (QSO) at a redshift of z=1.277. From this, using f' = fo/(1+z), where fo is the rest frequency of the line, 1420 MHz, we get the frequency at which the line should be, which comes out to be about 623.62 MHz. Note that this is a case where the absorbing (or emitting gas) is close to the background source. If the gas is present somewhere between us and the source/target, we won't be able to locate the frequency of the line in this way, as the redshift of the gas would be unknown.
 
 The task ``plotms`` is used to plot the data. It opens a GUI in which you can choose to display portions of your data.
 Go through the help for plotms GUI in CASA documentation for more details on its usage (https://casadocs.readthedocs.io/en/v6.2.0/api/tt/casatasks.visualization.plotms.html).
@@ -133,44 +133,44 @@ over baselines.
 
 .. admonition:: Note
 
-   For spectral line analysis, usually the targets are point sources and we do not require the use of data from central square baselines of    
-   uGMRT. This is because these are mostly relevant for imaging extended objects and also are prone to have higher RFIs (Radio frequency 
-   interferences). Hence they are omitted from the entire process, by setting the condition uvrange='>1.5km' in the functions.
+   For spectral line analysis, usually, the targets are point sources, and we do not require the use of data from central square baselines of    
+   uGMRT. This is because these are mostly relevant for imaging extended objects and are also prone to have higher RFIs (Radio frequency 
+   interferences). Hence they are omitted from the entire process by setting the condition uvrange='>1.5km' in the functions.
 
-Hence in plotms, to view the data as shown in the following image, set spw as 0:400, uvrange as >1.5km and corr as rr. Iteration over anntennas in the Page tab seen on the left of the plotms window should be selected. From the Axes tab, choose x-axis as time and data as amp.
-It is good to set the inputs for a task to default before running it. 
+In plotms, to view the raw data as a function of time for a particular frequency, set spw as 0:400, uvrange as >1.5km and corr as rr. From the Axes tab, choose x-axis as time and data as amp. One can also iterate over antennas in the Page tab seen on the left of the plotms window should be selected. 
+It is good to set the inputs for a task to default before running it.  
 
 .. code-block::
 
    default(plotms)
    plotms
 
-.. figure:: /images/specline/plotmsampvstime.png
+.. figure:: /images/specline/plotms_timerawdata.png
    :alt: Plotms screenshot amp vs time
    :align: center
    :scale: 70% 
    
-   *Screenshot of plotms. Fields 0 and 1 for the channel 400 and correlation rr are plotted for antenna C00.*
+   *Screenshot of plotms. Fields 0 and 1 for channel 400 and correlation rr are plotted. Left is the data using all uv plane, and right is excluding the short baselines uvrange < 1.5km. Note the cleaner data and lower RFI in the latter plot.*
 
 
 Flagging
 ---------
 
-Editing out bad data (e. g. non-working antennas, RFI affected channels, etc.) is termed as flagging. In our MS file, 
+Editing out bad data (e.g., non-working antennas, RFI-affected channels, etc.) is termed flagging. In our MS file, 
 the bad data will be marked with flags and not actually removed as such - thus the term *flagging*.
 The task ``flagdata`` will be used to flag the data. See the detailed CASA documentation on flagging using the 
 task ``flagdata``.
 
-Here some typical steps of flagging are outlined to get you started.
+Here, some typical steps for flagging are outlined to get you started.
 
-Usually the first spectral channel is saturated. Thus it is a good idea to flag the first spectral channel.
+Usually, the first spectral channel is saturated. Thus, it is a good idea to flag the first spectral channel.
 
 .. code-block::
 
    tget flagdata
    default
    inp 
-   vis = '0311.ms'
+   vis = '1543+480.ms'
    mode = 'manual'
    spw = '0:0'
    savepars = True
@@ -178,16 +178,16 @@ Usually the first spectral channel is saturated. Thus it is a good idea to flag 
    go 
 
    
-In the next step we would like to flag data on antennas that were not working.
-Using ``plotms``, plot the freq vs amp(data) with iteration of antenna with uvrange>1.5 km, and note the behaviour for all the scans. The condition of uvrange>1.5 km is given so as to not use the central square baselines for spectral line imaging.
-Find out which antennas were not working. Non-working antennas *generally* show up as those having very small amplitude even on bright calibrators, show no relative change of amplitude for calibrators and target sources and the phases towards calibrator sources on any given baseline will be randomly distributed between -180 to 180 degreees. If such antennas are found in the data, those can be flagged using 
+In the next step, we would like to flag data on antennas that were not working.
+Using ``plotms``, plot the freq vs amp(data) with the iteration of antenna with uvrange>1.5 km, and note the behaviour for all the scans. The condition of uvrange>1.5 km is given so as to not use the central square baselines for spectral line imaging.
+Find out which antennas were not working. Non-working antennas *generally* show up as those having very small amplitude, even on bright calibrators, show no relative change of amplitude for calibrators and target sources and the phases towards calibrator sources on any given baseline will be randomly distributed between -180 to 180 degrees. If such antennas are found in the data, those can be flagged using 
 the task ``flagdata``. 
-**Only an example is provided here - you need to locate the bad antennas in the tutorial data and flag those.** Remember also that some antennas may not be bad at all times. However if an antennas stops working while on the target source, it can be difficult to find out. Thus make a decision based on the secondary calibrator scans. Depending on when such antennas stopped working, you can choose to flag them for that duration. Check the two polarizations separately.
+**Only an example is provided here - you need to locate the bad antennas in the tutorial data and flag those.** Remember also that some antennas may not be bad at all times. However, if an antenna stops working while on the target source, it can be difficult to find out. Thus, a decision should be made based on the secondary calibrator scans. Depending on when such antennas stopped working, you can choose to flag them for that duration. Check the two polarizations separately.
 
 Although ``plotms`` provides options for flagging data interactively, at this stage, we will choose to just locate the bad data and flag it 
  using the task ``flagdata``.
 
-The following command is an example where the three antennas namely E02, S02 and W06 are non functioning and are flagged. **For the dataset given to you, this may not be the case and hence check for bad antennas.** If all antennas are functioning, skip this step.
+The following command is an example where the three antennas, namely E02, S02 and W06, are non-functioning and are flagged. **For the dataset given to you, this may not be the case and hence check for bad antennas.** If all antennas are functioning, skip this step.
 
 
 .. code-block::
@@ -212,29 +212,28 @@ signal. Thus we will flag the affected channels (may be individual or groups of 
 
 For the dataset given, upon plotting field id 0 with freq vs amp(data), we see that there is a RFI spike. Selecting the data points on the spike (see figure), and look up on the casa log. 
 
-.. figure:: /images/specline/flagrfispike_1.png
+.. figure:: /images/specline/rfi_spikes.png
    :alt: Plotms screenshot rfi spike 1
    :align: center
    :scale: 70% 
    
-   *Screenshot of rfi spike. From the panel below in plotms, choose 'mark regions' and select a few points in spike.*
+   *Screenshot of RFI spikes. From the panel below in plotms, choose 'mark regions' and select a few points in spike.*
 
-.. figure:: /images/specline/flagrfispike_2.png
+.. figure:: /images/specline/rfi_spikes2.png
    :alt: Plotms screenshot rfi spike 2
    :align: center
    :scale: 70% 
    
-   *Screenshot of rfi spike. After selection, choose the option 'locate' from panel below.*
+   *After selection, choose the option 'locate' from panel below and check the log file.*
 
-.. figure:: /images/specline/flagrfispike_3log.png
+.. figure:: /images/specline/rfi_spikes3.png
    :alt: Log screenshot rfi spike 3
    :align: center
    :scale: 70% 
    
    *Screenshot of casa log. Note down the antenna baselines, scan number, channels, etc in which the RFI is present. We need to flag it.*
 
-We see that the RFI is present in baselines of particular channel numbers 126-127. We carefully look at the bad baselines present in the rfi spike and flag only required baselines, as follows:
-Note: first flag the channel 127 (i.e. till first "go") and then continue with flagging others. Also, the following is conservative way of flagging a spike, to save time on expense of accuracy, one can flag the entire channels 126 to 128, 180 and 311 completely. 
+Flag the corresponding channels/ baselines containing the RFI spikes individually. An example to flag a particular spike present in all fields at channel # 302 is shown below: 
 
 .. code-block::
 
@@ -242,70 +241,33 @@ Note: first flag the channel 127 (i.e. till first "go") and then continue with f
    default
    inp
    mode='manual'
-   vis='0311.ms'
-   spw='0:127'
+   vis='1543+480.ms'
+   spw='0:302'
    savepars = True
-   field='0'
-   antenna='W04&W05;W05&W06;E05&E06'
    go
-   spw='0:311'
-   antenna='W06'
-   go
-   spw='0:126~128'
-   scan='1'
-   antenna='W04,W05,W06'
-   go
-   spw='0:127'
-   go
-   antenna='S01,E06,C02'
-   go
-   antenna='C10&S04'
-   scan='3'
-   antenna='W06,S01,C02,E06,W05'
-   go
-   antenna='E06&W05;C10&W05'
-   go
-   field='0'
-   spw='0:180'
-   scan='1'
-   antenna='W01,S01,S02,S03,S04,C13'
-   go
-   scan='3'
-   antenna='C12,C13,S03,S02,S06'
-   go
+   
 
-After flagging on field 0, repeat the same for other fields in data. The RFI spikes need to be carefully looked at, and only flag the essential fault baselines. For field 1, entire channels with RFI spikes are flagged as:
+Similarly, flag the other RFI spikes that are persistent. The RFI spikes need to be carefully looked at, and only flag the essential faulty channels/baselines.
 
 .. code-block::
 
    tget flagdata
    default
    inp
-   mode='manual'
-   vis='0311.ms'
-   savepars=True
-   field='1'
-   spw='0:123'
-   go
-   spw='0:126~131'
-   go
-   spw='180'
-   go
-   spw='0:300~304'
-   antenna='S02&S04'
+   spw='0:111,0:210,0:234,0:357,0:480'
    go
 
 Tick the reload option on plotms and plot again on the plotms to verify if the flagging is reflected.
 
-.. figure:: /images/specline/flagrfispike_4done.png
+.. figure:: /images/specline/rfi_spikes_removed.png
    :alt: Plotms screenshot rfi spike removed
    :align: center
    :scale: 70% 
    
-   *Screenshot of plotms after flagging. Note that the spike is no more present, and the selected region can be unselected using the 'clear region' from below panel.*
+   *Screenshot of plotms after flagging RFI spikes. Note that the spikes are no longer present, and the selected region can be unselected using the 'clear region' from the panel below.*
 
 
-If for some reason you flag a wrong data and want to reverse the flag, the command "flagmanager" is used. 
+If, for any reason, you flag the wrong data and want to reverse the flag, the command "flag manager" is used. 
 
 .. code-block::
 
@@ -316,7 +278,7 @@ If for some reason you flag a wrong data and want to reverse the flag, the comma
    mode='list'
    go
 
-This displays the list of all flag operations performed. Note the flag version name from this list, and say the latest flag that you performed has the name flagdata_4. To unflag this latest flag operation, following command is used:
+This displays the list of all flag operations performed. Note the flag version name from this list, and say the latest flag that you performed has the name flagdata_4. To unflag this latest flag operation, the following command is used:
 
 .. code-block::
 
@@ -516,7 +478,7 @@ A round of ``gaincal`` and ``applycal`` is to be done before the inital bandpass
 Initial Bandpass calibration
 ----------------------------
 
-In this step, initial bandpass calibration is done on flux calibrators. We can also use the phase calibrator for this purpose if it is bright enough, more precisely if the relation tcal > tobj(Sobj/Scal)^2 holds true, where tcal is the total time spent observing the calibrator, tobj is time spent oberving the target, Sobj and Scal are the flux densities of the target and calibrator respectively. The observation time values can be found from ``listobs``; Sobj can be found in database like NVSS survey by inputting the coordinates of target and Scal is found from fluxscale.
+In this step, initial bandpass calibration is done on flux calibrators. We can also use the phase calibrator for this purpose if it is bright enough, more precisely if the relation tcal > tobj(Sobj/Scal)^2 holds true, where tcal is the total time spent observing the calibrator, tobj is time spent observing the target, Sobj and Scal are the flux densities of the target and calibrator respectively. The observation time values can be found from ``listobs``; Sobj can be found in database like NVSS survey by inputting the coordinates of target and Scal is found from fluxscale.
 
 .. admonition:: Note
    For flux values of target: https://www.cv.nrao.edu/nvss/NVSSlist.shtml 
@@ -629,7 +591,7 @@ In delay calibration, a reference antenna is required. Here "C00" is only taken 
    refant='C00'
    go
 
-Copying the soultions to a new table, we do a round of amp-phase gaincal with all calibrator fields and solution types of ’int’ and ’2min’. The ’int’ solutions are used for bandpass calibration and the ’2min’ solutions are used for the actual calibration.
+Copying the solutions to a new table, we do a round of amp-phase gaincal with all calibrator fields and solution types of ’int’ and ’2min’. The ’int’ solutions are used for bandpass calibration and the ’2min’ solutions are used for the actual calibration.
 
 .. code-block::
 
