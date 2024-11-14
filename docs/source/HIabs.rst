@@ -267,7 +267,7 @@ Tick the reload option on plotms and plot again on the plotms to verify if the f
    *Screenshot of plotms after flagging RFI spikes. Note that the spikes are no longer present, and the selected region can be unselected using the 'clear region' from the panel below.*
 
 
-If, for any reason, you flag the wrong data and want to reverse the flag, the command "flag manager" is used. 
+(Bonus) If, for any reason, you flag the wrong data and want to reverse the flag, the command "flag manager" is used. 
 
 .. code-block::
 
@@ -295,92 +295,57 @@ This displays the list of all flag operations performed. Note the flag version n
 Intital Gain calibration before flagging of unwanted data
 ---------------------------------------------------------
 
-Pick a clean line free channel (or a bunch of channels which does not have any RFI and does not contain the target spectral line). This would act as a reference upon which gain calibration is done, and later applied to all channels. Number of channels to be selected for averaging depends on SNR we require (if too many solutions fail and get flagged in gaincal for minsnr=5, average more channels to increase SNR). Typically, a single channel is chosen for this, however in the example below, 40 channels from channel number 300 to 339 are averaged, hence the command spw='0:300~339'. If however only a single channel, say channel number 300 were to be chosen, it would be written as spw='0:300'.
-Create a directory for the solution tables, and also one for images as follows (use "!" mark at the beginning if commands are written at the casa ipython prompt):
+Pick a clean line-free channel (or if many solutions fail due to low SNR, a bunch of channels which does not have any RFI and do not contain the target spectral line). This would act as a reference upon which gain calibration is done and later applied to all channels. The number of channels to be selected for averaging depends on SNR we require (if too many solutions fail and get flagged in gaincal for minsnr=5, average more channels to increase SNR). Typically, a single channel is chosen for this, say channel 100, hence the command spw='0:100'. 
+Create a directory for the solution tables and also one for images as follows (use "!" mark at the beginning if the commands are written at the casa ipython prompt):
 
 .. code-block::
 
-   mkdir caltables
-   mkdir images
+   !mkdir caltables
+   !mkdir images
 
-Say for example the field ids of flux calibrator are 0 and 3, and that of phase calibrator is 1. A first round of initial gain calibration is done only on calibrators (and not on target) as follows:
+The field ID of the flux calibrator is 0, and that of the phase calibrator is 1. Hence the first round of initial gain calibration is done only on calibrators (and not on target) as follows:
 
 .. code-block::
 
    tget gaincal
    inp
-   vis='example.ms'
+   vis='1543+480.ms'
    caltable='caltables/gainsol.apcal'
    solint='int'
    uvrange='>1.5km'
    minsnr=5.0
-   field='0,1,3'
-   spw='0:500∼539'
+   field='0,1'
+   spw='0:100'
    go
 
 
-Followed by an ``applycal``, applying the calibration to all the channels of calibrators.
+Note that since the source would be a point source, we have excluded the short baselines by uvrange='>1.5km'. This is followed by an ``applycal``, applying the calibration to all the channels of calibrators.
 
 .. code-block::
 
    tget applycal
    inp
-   vis='example.ms'
-   field='0,1,3'
+   vis='1543+480.ms'
+   field='0,1'
    gaintable=['caltables/gainsol.apcal']
    calwt=[False]
    go
    
-For the tutorial dataset given, we do not have a phase calibrator, and there is a single flux calibrator with field id 0. This step is implimented as follows:
 
-.. code-block::
-
-   tget gaincal
-   inp
-   defalut
-   vis='0311.ms'
-   caltable='caltables/gainsol.apcal'
-   solint='int'
-   uvrange='>1.5km'
-   minsnr=5.0
-   field='0'
-   spw='0:360~399'
-   go
-
-Followed by ``applycal``:
-
-.. code-block::
-
-   tget applycal
-   inp
-   default
-   vis='0311.ms'
-   field='0'
-   gaintable=['caltables/gainsol.apcal']
-   calwt=[False]
-   go
-
-It is wise to keep a track of flagging percentage in the data. If too much of data gets flagged, there won't be much useful data left. The task ``flagdata`` in mode of 'summary' allows us to keep track of this. Use the following commands:
+It is wise to keep track of the flagging percentage in the data. If too much data gets flagged, there won't be much useful data left. The task ``flagdata`` in the mode of 'summary' allows us to keep track of this. Use the following commands:
 
 .. code-block::
 
    tget flagdata
    inp
    default
-   vis='0311.ms'
+   vis='1543+480.ms'
    mode='summary'
    go
 
-In the following figure, we can see the flag percentage for each field.
 
-.. figure:: /images/specline/flagpercent.png
-   :alt: Log screenshot flagmanager
-   :align: center
-   :scale: 70% 
-   
-   *Screenshot of casa log file for noting flagging percentage.*
 
-In the plotms, plot amp vs uvdist with corrected data column for the entire channel, check field by field the calibrator data starting with field 0. Inspect and flag the baselines which jump around too much from the pack. Ideally the pack must be centered around amp of 1, with the baselines staying in and around that value. If the entire line jumps from this median by a large amount, it can be flagged.
+In the plotms, plot amp vs uvdist with the corrected data column for the entire channel, and check the calibrator data starting with field 0. Inspect and flag the baselines that jump around too much from the pack. Ideally, the pack must be centred around an amp of 1, with the baselines staying in and around that value. If the entire line jumps from this median by a large amount, it can be flagged.
 
 In the following figure, we can see the flag percentage for each field.
 
@@ -391,24 +356,19 @@ In the following figure, we can see the flag percentage for each field.
    
    *Screenshot of plotms for uvdist vs amp (corrected). Note that a few baselines are jumping.*
 
-It can be seen again by selection and from casa log that the lines belong to scan 1 are from baselines 'W04&W05', 'W05&W06', 'C05&S01', 'C10&S01' and 'C11&S01' and that from scan 3 are 'C11&S01' and 'S01&S04'. These are repectively flagged as follows:
+As there are not many obvious visible bad data, we can run a round of automated flagger ``rflag`` on the calibrator fields.
 
 .. code-block::
 
    tget flagdata
-   inp
-   default
-   vis='0311.ms'
-   scan='1'
-   field='0' 
-   antenna='C11&S01;C05&S01
+   vis='1543+480.ms'
+   mode='rflag'
+   field='0,1'
+   datacolumn='corrected'
    go
 
-   scan='3'
-   antenna='C11&S01;S01&C09'
-   go
 
-The plot shows as below:   
+The plot is shown as below:   
 
 .. figure:: /images/specline/uvdistvsamp_after1.png
    :alt: Plotms screenshot after flag calibration
@@ -417,128 +377,100 @@ The plot shows as below:
    
    *Screenshot of plotms for uvdist vs amp (corrected). Note that most of the baselines are packed around amp = 1 with almost no outliers.*
 
-We need to check if amp and/or phase plotted w.r.to uvdist is flat because these are point sources at phase center so amp should not depend on uvdist and phase should also not depend on uvdist. To summarize, check uvdist vs amp corrected plots, with antenna iteration and baseline colorization; or baseline iteration and antenna1/corr colorization, if required channels averaged, field by field with uvrange>1.5km.
+We need to check if amp and/or phase plotted w.r.to uvdist is flat because these are point sources at phase centre, so amp should not depend on uvdist, and phase should also not depend on uvdist. To summarize, check uvdist vs amp corrected plots, with antenna iteration and baseline colorization; or baseline iteration and antenna1/corr colorization, if required channels averaged, field by field with uvrange>1.5km. 
 
 
 Absolute flux density calibration
 ----------------------------------
 
-We use the task ``setjy`` to set the flux densities of the standard flux calibrators in the data here before redoing the ``gaincal``. Following are the commands for setjy, which is to be done for all flux calibrator fields present:
+We use the task ``setjy`` to set the flux densities of the standard flux calibrators in the data here before redoing the ``gaincal``. Following are the commands for the task 'setjy', which is to be done for all flux calibrator fields present:
 
 .. code-block::
 
-   get setjy
+   tget setjy
    default
    inp
-   vis='0311.ms'
+   vis='1543+480.ms' 
    field='0'
    usescratch=True
    go   
 
-The flux values assigned can be verified using the VLA calibrator manual, and the obtained value must be close to the wavelength band value from the manual where the spectral line is expected. Now, we can perform the gain calibration on calibrators using averaged bunch of channels and apply it to all the channels and fields except the target source. As we have completed setjy, the flux of flux calibrators which was centered about 1 will now be centered about their respective values. Note that the standard, 'Perley-Butler 2017' identifies most of the flux calibrators used by uGMRT. Some calibrators may not be recognized, for which the standard 'Stevens-Reynolds 2016' can be used. If the calibrator is still not recognized by these standards, the flux values need to entered manually for the calibrator.
+The flux values assigned can be verified using the VLA calibrator manual, and the obtained value must be close to the wavelength band value from the manual where the spectral line is expected. For the calibrator in the tutorial dataset, we find that the setjy flux level is 21.71 Jy, which is close to the reference level in the calibrator manual. Now, we can perform the gain calibration on calibrators using the single channel (or a bunch of channels if used as explained earlier) and apply it to all the channels and fields except the target source. 
+
+.. code-block::
+
+   tget gaincal
+   field='0,1'
+   caltable='caltables/gainsol_1.apcal'
+   uvrange='>1.5km'
+   spw='0:100'
+   solint='int'
+   go
+
+   tget applycal
+   field='0,1'
+   gaintable=['caltables/gainsol_1.apcal']
+   go
+
+
+As we have completed the setjy, the flux of flux calibrators, which was centred about 1, will now be centred on their respective flux values. Note that the standard, 'Perley-Butler 2017' identifies most of the flux calibrators used by uGMRT. Some calibrators may not be recognized, in which case the standard 'Stevens-Reynolds 2016' can be used. If the calibrator is still not recognized by these standards, the flux values need to be entered manually for the calibrator.
 
 .. figure:: /images/specline/setjy_3c48.png
    :alt: Log screenshot after setjy
    :align: center
    :scale: 70% 
    
-   *Screenshot of casa log for task setjy. Note that assigned flux for the calibrator 3C48 is 38.43 Jy. Since the central frequency of our dataset is 431.7 MHz, which is about 69.4 cm wavelength, from VLA calibrator manual we see that the flux value lies between 20cm band and 90cm band.*
+   *Screenshot of casa log for task setjy. Note that the assigned flux for the calibrator 3C286 is 21.71 Jy. Since the central frequency of our dataset is about 623 MHz, which is about 48.1 cm wavelength, from the VLA calibrator manual, we see that the flux value lies between the 20cm band and 90cm band.*
 
-We would want to transfer the flux calibration solutions to the phase calibrator, so that its flux can be calibrated and scaled. If the data has two or more flux calibrators, we may choose the brightest one having cleaner and lower flagged data to use as reference to transfer the solutions from. To transfer the solution from flux calibrator field 3 to phase calibrator field 1:
+We would want to transfer the flux calibration solutions to the phase calibrator so that its flux can be calibrated and scaled. If the data has two or more flux calibrators, we may choose the brightest one having cleaner and lower flagged data to use as a reference to transfer the solutions from. To transfer the solution from flux calibrator field 0 to phase calibrator field 1:
 
 .. code-block::
 
    tget fluxscale
    inp
-   vis='example.ms'
-   caltable='caltables/gainsol 1.apcal'
-   fluxtable='caltables/gainsol 1.fcal'
-   reference=['3']
+   vis='1543+480.ms'
+   caltable='caltables/gainsol_1.apcal'
+   fluxtable='caltables/gainsol_1.fcal'
+   reference=['0']
    transfer=['1']
    go
 
-After the task ``fluxscale``, the reported flux density of the phase calibrator must be compared with standard flux density from VLA manual. Since there is no phase calibrator present in tutorial data, ``fluxscale`` part is not needed.
-A round of ``gaincal`` and ``applycal`` is to be done before the inital bandpass calibration with same paramters as before:
-
-.. code-block::
-
-   tget gaincal
-   inp
-   field='0'
-   caltable='caltables/gainsol_1.apcal'
-   go
-
-   tget applycal
-   inp
-   field='0'
-   gaintable=['caltables/gainsol_1.apcal']
-   go
+After the task ``fluxscale``, the reported flux density of the phase calibrator must be compared with the standard flux density from VLA calibrator manual. 
 
 
 Initial Bandpass calibration
 ----------------------------
 
-In this step, initial bandpass calibration is done on flux calibrators. We can also use the phase calibrator for this purpose if it is bright enough, more precisely if the relation tcal > tobj(Sobj/Scal)^2 holds true, where tcal is the total time spent observing the calibrator, tobj is time spent observing the target, Sobj and Scal are the flux densities of the target and calibrator respectively. The observation time values can be found from ``listobs``; Sobj can be found in database like NVSS survey by inputting the coordinates of target and Scal is found from fluxscale.
+In this step, an initial bandpass calibration is done on flux calibrators. We can also use the phase calibrator for this purpose if it is bright enough, more precisely if the relation tcal > tobj(Sobj/Scal)^2 holds true, where tcal is the total time spent observing the calibrator, tobj is time spent observing the target, Sobj and Scal are the flux densities of the target and calibrator respectively. The observation time values can be found from ``listobs``; Sobj can be found in databases like NVSS survey by inputting the coordinates of the target, and Scal is found from fluxscale. We also need to choose a reference antenna for bandpass calibration, where we select the best-behaving antenna with ideally the least data flagged.
 
 .. admonition:: Note
    For flux values of target: https://www.cv.nrao.edu/nvss/NVSSlist.shtml 
 
-For the example data, if the phase calibrator is bright enough, it is included in bandpass calibration along with flux calibratior fields of 0 and 3:
+By working out this math, we find that the phase cal is bright enough to be used in bandpass calibration. We included it in bandpass calibration along with flux calibrator as:
 
 .. code-block::
 
    tget bandpass
    default
    inp
-   vis='example.ms'
-   caltable='caltables/bpass 0.bcal'
-   uvrane='>1.5km'
-   refant='C00'
+   vis='1543+480.ms'
+   caltable='caltables/bpass_1.bcal'
+   refant='E03'
    gaintable=['caltables/gainsol_1.apcal']
-   field='0,1,3'
+   field='0,1'
    minsnr=5.0
    uvrange='>1.5km'
    go
 
-The solutions are first applied to the flux calibrator field by applycal and a round of automated flagger rflag is used. After this, the amp(corrected) vs frequency plot would look like the figure below, where the flux is peaked and centred around the limit set by setjy and we see a band.
+The solutions are first applied to the flux calibrator field by applycal, and a round of automated flagger rflag can be used if required. 
 
 .. code-block::
 
    tget applycal
    inp
-   vis='example.ms'
-   field='0,3'
-   gaintable=['caltables/gainsol_1.apcal','caltables/bpass_0.bcal']
-   go
-
-   tget flagdata
-   mode='rflag'
-   spw=' '
-   field='0,3'
-   datacolumn='corrected'
-   timedevscale=5.0
-   freqdevscale=5.0
-   go
-
-For the tutorial dataset, this entire set of tasks are shown below:
-
-.. code-block::
-
-   tget bandpass
-   inp
-   vis='0311.ms'
-   caltable='caltables/bpass_0.bcal'
-   gaintable=['caltables/gainsol_1.apcal'] 
+   vis='1543+480.ms'
    field='0'
-   uvrange='>1.5km'
-   refant='C00'
-   minsnr=5.0
-   go
-
-   tget applycal
-   inp
-   field='0'
-   gaintable=['caltables/gainsol_1.apcal','caltables/bpass_0.bcal']
+   gaintable=['caltables/gainsol_1.apcal','caltables/bpass_1.bcal']
    go
 
    tget flagdata
@@ -546,12 +478,12 @@ For the tutorial dataset, this entire set of tasks are shown below:
    spw=' '
    field='0'
    datacolumn='corrected'
-   timedevscale=5.0
-   freqdevscale=5.0
+   timedevscale=4.5
+   freqdevscale=4.5
    go
 
+After this, the amp(corrected) vs frequency plot would look like the figure below, where the flux is peaked and centred around the limit set by setjy, and we see a band.
 
-Following is the amp (corrected) vs freq plot for 0311.ms field 0 of tutorial dataset post initial bandpass calibration and automated flagging by rflag.
 
 .. figure:: /images/specline/field0_postinibpass_postrflag.png
    :alt: Screenshot of the plotms after initial bpass and rflag
@@ -560,7 +492,7 @@ Following is the amp (corrected) vs freq plot for 0311.ms field 0 of tutorial da
    
    *Screenshot of amp(corrected) vs frequency on plotms.*
 
-Examine the bandpass table using ``plotms``. Choose the bandpass table bpass_0.bcal in data and check the plots Amp Vs Channels and Phase Vs Channels  iterated over antennas.
+Examine the bandpass table using ``plotms``. Choose the bandpass table bpass_1.bcal in data and check the plots Amp Vs Channels and Phase Vs Channels  iterated over antennas. Note that solution tables do not take uvrange or corr inputs on plotms.
 
 .. figure:: /images/specline/initialbpass_ampvsfreq.png
    :alt: Screenshot of the plotms for bandpass table
@@ -575,7 +507,7 @@ Note the shape of the band across the frequencies.
 Delay calibration and final Bandpass calibration
 ------------------------------------------------
 
-In delay calibration, a reference antenna is required. Here "C00" is only taken as an example. You may use any antenna that is working for the whole duration of the observation. We perform delay calibration only with flux calibrator field used for fluxscale and not with all calibrators.
+In the delay calibration as well a reference antenna is required. Here "E03" is only taken as an example. You may use any antenna that is working for the whole duration of the observation. We perform delay calibration only with flux calibrator field used for fluxscale and not with all calibrators.
 
 
 .. code-block::
@@ -584,14 +516,14 @@ In delay calibration, a reference antenna is required. Here "C00" is only taken 
    tget gaincal
    default
    inp
-   vis='0311.ms'                                                    
+   vis='1543+480.ms'                                                    
    field='0'
    gaintype='K'                                                        
    caltable='caltables/delay.kcal'                                     
-   refant='C00'
+   refant='E03'
    go
 
-Copying the solutions to a new table, we do a round of amp-phase gaincal with all calibrator fields and solution types of ’int’ and ’2min’. The ’int’ solutions are used for bandpass calibration and the ’2min’ solutions are used for the actual calibration.
+Copying the solutions to a new table, we do a round of amp-phase gaincal with all calibrator fields and solution types of ’int’ or different interval sizes like ’2min’ can be explored.
 
 .. code-block::
 
@@ -600,8 +532,8 @@ Copying the solutions to a new table, we do a round of amp-phase gaincal with al
    tget gaincal
    default
    inp
-   vis='0311.ms'
-   spw='0:360~399'
+   vis='1543+480.ms'
+   spw='0:100'
    solint='int'
    minsnr=5.0
    uvrange>'1.5km'
@@ -615,33 +547,33 @@ Copying the solutions to a new table, we do a round of amp-phase gaincal with al
    go
 
 The task ``fluxscale`` is performed again on both the solutions with the same parameters and flux calibrator field used earlier in fluxscale and save the solutions which will be used to transfer the final bandpass solutions to all fields, including the target field. 
-Note that this step is skipped for tutorial data set as there are no phase calibrators.
+
 
 .. code-block::
 
    tget fluxscale
-   caltable='caltables/gainsol int.apcal'
-   fluxtable='caltables/gainsol int.fcal'
+   caltable='caltables/gainsol_int.apcal'
+   fluxtable='caltables/gainsol_int.fcal'
    go
-   caltable='caltables/gainsol 2m.apcal'
-   fluxtable='caltables/gainsol 2m.fcal'
+   caltable='caltables/gainsol_2m.apcal'
+   fluxtable='caltables/gainsol_2m.fcal'
    go
 
 
-The bandpass calibration solutions are found using all (if phase calibrator was also used in inital bandpass, else only flux calibrators are used) the calibrator fields :
+The bandpass calibration solutions are found using all (if phase calibrator was also used in initial bandpass, else only flux calibrators are used) the calibrator fields :
 
 
 .. code-block::
 
    tget bandpass
    inp
-   vis='0311.ms'
-   field='0'
+   vis='1543+480.ms'
+   field='0,1'
    combine=''
-   refant='C00'
+   refant='E03'
    minsnr=5.0
    gaintable=['caltables/delay.kcal','caltables/gainsol_int.apcal']
-   caltable='caltables/bandpass_final.bcal' 
+   caltable='caltables/bandpass_finalint.bcal' 
    go
 
 The solutions are applied to all fields, including the target:
@@ -649,7 +581,7 @@ The solutions are applied to all fields, including the target:
 .. code-block::
 
    tget applycal
-   gaintable=['caltables/delay.kcal','caltables/bandpass_final.bcal'] 
+   gaintable=['caltables/delay.kcal','caltables/bandpass_finalint.bcal','caltables/gainsol_int.fcal'] 
    field=''
    go
 
@@ -670,7 +602,7 @@ The bandpass solution tables in plotms looks like the following, where amp vs fr
    *Screenshot of gain phase(data) vs frequency for the final bandpass solution table on plotms.*
 
 
-At this point, we should be able to see the line features in plotms upon plotting the target field amp (corrected) vs channel and averaging in time, scan and baselines. This helps us determine the channel number where line is present and to choose a bunch of channels containing the entire line width to be used later in self calibration to avoid cleaning of these channels.
+At this point, we should be able to see the spectral line features in plotms in the visibility domain upon plotting the target field amp (corrected) vs channel and averaging in time, scan and baselines. This helps us determine the channel number where the line is present and to choose a bunch of channels containing the entire line width to be used later in self-calibration to avoid cleaning these channels and potentially erasing the line features.
 
 .. figure:: /images/specline/postbpassavgtimebl.png
    :alt: Screenshot of the plotms after final bpass amp (corrected) vs chan with time and baseline averaging
@@ -679,12 +611,26 @@ At this point, we should be able to see the line features in plotms upon plottin
    
    *Screenshot of amp(corrected) vs frequency for the calibrated ms file with time and baseline averaging on plotms. Note the parameters set for the said averaging.*
 
+We run a round of automated 'rflag' on the source field to remove bad data.
+
+.. code-block::
+
+   tget flagdata
+   vis='1543+480.ms'
+   mode='rflag'
+   field='2'
+   datacolumn='corrected'
+   timedevscale=4.5
+   freqdevscale=4.5
+   go
+
+
 
 Splitting the calibrated target source data
 --------------------------------------------
 
-We will split the calibrated target source data to a new file and do the subsequent analysis on that file.
-Create a new directory named 'source'. We will split the target and save the new MS file in this directory. In the tutorial dataset, the target has field id of 1, and is used in "split" task as follows:
+We will split the calibrated target source data into a new file and do the subsequent analysis on that file.
+Create a new directory named 'source'. We will split the target and save the new MS file in this directory. In the tutorial dataset, the target has field ID of 2, and is used in the "split" task as follows:
 
 .. code-block::
 
@@ -692,23 +638,14 @@ Create a new directory named 'source'. We will split the target and save the new
    tget split 
    default
    inp
-   field='1'                                                        
-   vis='0311.ms'                                                 
+   field='2'                                                        
+   vis='1543+480.ms'                                                
    outputvis='source/source.ms' 
    go
 
-A round of automated flagger "rflag" can be run on this MS file.
 
-.. code-block::
-
-   tget flagdata
-   vis='source.ms'
-   mode='rflag' 
-   savepars=True
-   go
-
-When the data set is too large, and has many channels of data, like 2048 channels (standard uGMRT GWB data have a channel width of 12.207 kHz, giving a bandwidth of 25MHz for 2048 channels), to save on computation load and time, the file is can be further split into a lower resolution, channel averaged coarse MS file upon which self calibration task can be performed. For example, a 2048 channel source MS file is split by channel averaging of 20 channels chosen arbitrarily, giving a low resolution coarse file of about 101 channels.  For this, width = 20 must be given in task ``split``.
-Since our tutorial dataset contains 512 channels, we can average by about 4 channels, if required, else this step can be skipped.
+If the data set is too large and has many channels of data, for instance, 2048 channels (standard uGMRT GWB data have a channel width of 12.207 kHz, giving a bandwidth of 25MHz for 2048 channels), to save on computation load and time, the file is can be further split into a lower resolution, the channel averaged coarse MS file upon which self-calibration task can be performed. For example, a 2048-channel source MS file can be split by channel averaging of 20 channels chosen arbitrarily, giving a low-resolution coarse file of about 101 channels.  For this, width = 20 must be given in task ``split``.
+Since our tutorial dataset contains 512 channels, we can skip this step. Following is an example depicting the splitting of an ms file into a coarser resolution file. Please skip this step for tutorial data.
 
 .. code-block::
 
@@ -716,48 +653,26 @@ Since our tutorial dataset contains 512 channels, we can average by about 4 chan
    tget split
    default
    inp
-   vis='source.ms'
-   outputvis='source_coarse.ms'
-   width=4
+   vis='example.ms'
+   outputvis='example_coarse.ms'
+   width=20
    datacolumn='data'
    go 
 
 
-It is easier and faster to do self calibration on coarse file and later transfer the solutions to higher resolution split file to proceed for imaging.
+It is easier and faster to self-calibrate on a coarse file and later transfer the solutions to a higher resolution split file to proceed with imaging.
 
 .. admonition: Note
    We have not taken any special note of the spectral line in steps till now. The channels 
    containing the line must not be treated special and usual steps of flagging and initial calibration must be performed. The important 
-   deviation arrives during self calibration, where we have to exclude the channel range where line features are present or expected to 
+   deviation arrives during self-calibration, where we have to exclude the channel range where line features are present or expected to 
    occur.
 
 
-Self calibration process
+Self-calibration process
 ------------------------
 
-This is an iterative process. The model from the first ``tclean`` is used to calibrate the data and the corrected data are then imaged to make a better model and the process is repeated. The order of the tasks is tclean, gaincal, applycal, tclean. In this section we perform self calibration on the coarse file (if created, else it is performed on source file). In following example, we perform it on source file. A test image can be created before the self cal run, to be sure of the parameters to be used in cleaning the image using the task "tclean" and for selfcal cycles. Inputs are given as follows, where first two lines are to create new directories for images and calibration tables:
-
-.. code-block::
-
-   !mkdir images
-   !mkdir caltables   
-   tget tclean
-   inp
-   vis='source_coarse.ms'  
-   cell=['0.3 arcsec']
-   imsize=[256]
-   imagename='images/testimage'
-   gridder='wproject'
-   wprojplanes=-1
-   weighting='briggs'
-   robust=-0.5
-   uvtaper=['30klambda'] 
-   uvrange='>1.5km'
-   go
-
-
-The imsize is chosen to cover a size of the field at least covering FWHM of the primary beam. The cellsize is chosen to be at least a third or more of the expected synthesized beam size.
-Here, uvtaper parameter is found by plotting 'uvwave' vs amp in plotms for the visibility source.ms file and noting the distance where the tapering must be smoothed from, which would be some distance before the amp starts going to zero. 
+This is an iterative process. The model from the first ``tclean`` is used to calibrate the data and the corrected data are then imaged to make a better model and the process is repeated. The order of the tasks is tclean, gaincal, applycal, tclean. In this section, we perform self-calibration on the source file (if a coarse file is created, these steps need to be done on that file and later transferred to the source file). In the following example, we perform it on the source file. A test dirty image can be created before the self-cal run to ensure the parameters are used in cleaning the image using the task "clean" and for self-cal cycles. The parameter uvtaper is found by plotting 'uvwave' vs amp in plotms for the visibility source.ms file and noting the distance where the tapering must be smoothed from, which would be some distance before the amp starts going to zero. 
 
 .. figure:: /images/specline/uvtaper.png
    :alt: Screenshot of the plotms Amp Vs uvwave for uvtaper
@@ -766,10 +681,34 @@ Here, uvtaper parameter is found by plotting 'uvwave' vs amp in plotms for the v
    
    *Screenshot of amp(data) vs uvwave for ms file to determine the uvtaper parameter on plotms.*
 
+Inputs to make a dirty image are given as follows, where the first two lines are to create new directories for images and calibration tables:
 
-**Self-cal cycles:** We start by cleaning the image (deconvolving) only selecting the channels which do not contain the line. This is done in the ``tclean`` by selecting spw range suitably. 
+.. code-block::
 
-The cleaning is done interactively by first masking the sources visible in the dialog view, and running the process again using the green arrow button (continue deconvolving with current clean regions) which continues the deconvolution with current clean channels in viewer GUI. We keep adding masks to any new source visible in each step and keep deconvolving until the target source noise level is reached, i.e. until the entire image looks like noise. The deconvolution is stopped at this point by clicking the red cross button. Then a round of phase only cal is performed while selecting the same spw range and applying it to all channels. With the same parameters to task ``tclean``, folowing paramters are updated and subsequestly the phase only cal is done:
+   !mkdir images
+   !mkdir caltables   
+   tget tclean
+   inp
+   vis='source.ms'  
+   cell=['0.14 arcsec']
+   imsize = [3000]
+   imagename='images/testimage'
+   gridder='wproject'
+   wprojplanes=-1
+   weighting='briggs'
+   robust=-0.5
+   uvtaper=['40klambda'] 
+   uvrange='>1.5km'
+   go
+
+
+The imsize is chosen such that it covers and images the FWHM of the primary beam. The cell size is chosen to be at least a third or more of the expected synthesized beam size. These can be determined from the antenna aperture and wavelength of observation and the longest baseline of uGMRT array, respectively.
+
+
+
+**Self-cal cycles:** We start by cleaning the image (deconvolving) by only selecting the channels that do not contain the line. This is done in the ``tclean`` by selecting spw range suitably. 
+
+The cleaning is done interactively by first masking the sources visible in the dialog view, and running the process again using the green arrow button (continue deconvolving with current clean regions) which continues the deconvolution with current clean channels in viewer GUI. We keep adding masks to any new source visible in each step and keep deconvolving until the target source noise level is reached, i.e. until the entire image looks like a uniform noise. The deconvolution is stopped at this point by clicking the red cross button. Then a round of phase-only cal is performed while selecting the same spw range and applying it to all channels. With the same parameters to task ``tclean``, following parameters are updated and subsequently the phase-only cal is done:
 
 .. figure:: /images/specline/intcleandialogbox.png
    :alt: Screenshot of the viewer dialog box GUI
@@ -778,22 +717,24 @@ The cleaning is done interactively by first masking the sources visible in the d
    
    *Screenshot of casa viewer interactive windoow dialog menu.*
 
+Note that the spectral line of interest lies near channel 230 in the full resolution source file, so we exclude the line and nearby continuum channels, picking a spectral window of spw='0:0~209,0:271~511' for the self-cal steps.
+
 .. code-block::
 
    tget tclean
    inp
-   imsize=[4096]
-   cell=['0.4 arcsec']
+   imsize=[3000]
+   cell=['0.14 arcsec']
    niter=1000000
    interactive=True
    imagename='images/selfcal_0'
    pblimit=-0.01
    savemodel='modelcolumn'
-   spw='0:0~53,0:73~127'
+   spw='0:0~209,0:271~511'
    go
 
 
-Where we have noted that the line features are within the channels 230 to 290 for source file, and hence for coarse file it would be about 57th to 73rd channels to be excluded. The viewer GUI opens automatically and we see the following window. Here, the masking of sources is done by checking the 'add' option and drawing contours around the visible source and double clicking inside the region to save the mask. To delete a mask, check the 'erase' option, create the boundary around the mask you wish to remove and double click inside the region1.
+The viewer GUI opens automatically, and we will see the following window. Here, the masking of sources is done by checking the 'add' option, drawing contours around the visible source, and double-clicking inside the region to save the mask. To delete a mask, check the 'erase' option, create the boundary around the mask you wish to remove and double-click inside the region.
 
 .. figure:: /images/specline/intcleangui.png
    :alt: Screenshot of the viewer dialog GUI
@@ -802,32 +743,32 @@ Where we have noted that the line features are within the channels 230 to 290 fo
    
    *Screenshot of casa viewer interactive windoow.*
 
-The phase only cal is performed once the viewer GUI closes automatically as follows:
+The phase-only cal is performed once the viewer GUI closes automatically after you stop the deconvolution when the image noise level is reached as follows:
 
 .. code-block::
 
    tget gaincal  
    inp
-   vis='source_coarse.ms'
+   vis='source.ms'
    caltable='caltables/selfcal_0.pcal'
    calmode='p'
-   solint='2min'
-   spw='0:0~53,0:73~127'
+   solint='int'
+   spw='0:0~209,0:271~511'
    uvrange='>1.5km'
    minsnr=5.0
    go
    
    tget applycal 
    inp
-   vis='source_coarse.ms'
+   vis='source.ms'
    gaintable=['caltables/selfcal_0.pcal']
    calwt=[False] 
    go
 
 
-This process of interactive tclean and phase only calibration is done until there seems to be no improvement in noise levels of background, which is found by drawing a rectangular region far from source and looking at the rms value of the background noise. At this point, 4 times the rms is chosen as the threshold and a run of tclean is made with this threshold. This can be done either by setting interactive as False and specifically wrtiting the threshold value as command in tclean, or can be set in the interactive mode and the central blue button can be pressed for automatic deconvolution until the set threshold level is reached. Finally an amplitude and phase calibration (ap cal) is performed, before creating the final selfcal image. Everytime, we just need to change the image name and update the mask for tclean, and for gaincal and applycal, change the gaintable and caltable names. Observe the background noise rms of the image using imview, and take four times this value to set the threshold for ``tclean``.
+This process of interactive tclean and phase-only calibration is done until there seems to be no improvement in noise levels of background RMS, which is found by drawing a rectangular region far from the source and looking at the RMS value of the background noise in the statistics tab. At this point, 4 times RMS is chosen as the threshold and a run of tclean is made with this threshold. This can be done either by setting interactive as False and specifically writing the threshold value as a command in tclean, or it can be set in the interactive mode and the central blue button can be pressed for automatic deconvolution until the set threshold level is reached. Finally, an amplitude and phase calibration (apcal) is performed before creating the final selfcal image. At each step, we just need to change the image name and update the mask for tclean, and for gaincal and applycal, change the gaintable and caltable names. Observe the background noise rms of the image using review, and take four times this value to set the threshold for ``clean ``.
 
-For example, the cycles can be continued in following manner:
+For example, the cycles can be continued in the following manner:
 
 
 .. code-block::
@@ -861,7 +802,7 @@ For example, the cycles can be continued in following manner:
    gaintable=['caltables/selfcal_2.pcal']
    go
 
-Typically, 4 such rounds needs to be done. After this, we move ahead to do an ap cal with same spw parameters and then final tclean. Make sure to enter the latest selfcal image name and caltables properly.
+Typically, 4 such rounds needs to be done. After this, we do an apcal (amplitude and phase cal) with the same spw parameters and then final tclean. Make sure to enter the latest selfcal image name and caltables properly.
 
 .. code-block::
 
@@ -878,29 +819,16 @@ Typically, 4 such rounds needs to be done. After this, we move ahead to do an ap
    gaintable=['caltables/selfcal_4.apcal'] 
    go
 
-Create the final image using ``tclean`` task, either with interactive cleaning or without it.
+Create the final image using ``tclean`` task, either with interactive cleaning or without it. For the tutorial dataset, 4 rounds of phase-only selfcal and 2 rounds of amplitude and phase selfcal will suffice, taking us to an RMS noise levels close to 0.6 mJy.
 
 
-Subtraction of continuum
--------------------------
 
-Perform uvsub on source coarse.ms file, which does 
-corrected = corrected - model column, 
-subtracting the model solutions (which are essentially other sources in the field of view) from the corrected data visibilities column.
-
-
-.. code-block::
-
-   tget uvsub      
-   inp
-   vis='source_coarse.ms'
-   go
 
 
 Apply the calibration and fill the model column of source file
 --------------------------------------------------------------
 
-If required, a round of automated 'rflag' can be run on 'source_coarse.ms' file followed by a gainacal and applycal, after which create the final image using 'tclean'. The final calibration table of the last selfcal run is applied to source.ms file. For example if the latest selfcal caltables is selfcal_5.apcal, then this is done as: 
+If a coarse resolution file was used in selfcal. the final calibration table of the last selfcal run is applied to source.ms file. For example if the latest selfcal caltables is selfcal_5.apcal, then this is done as: (skip this step for tutorial dataset)
 
 
 .. code-block::
@@ -910,8 +838,9 @@ If required, a round of automated 'rflag' can be run on 'source_coarse.ms' file 
    vis='source.ms'  
    go
 
-Essentially, we use exactly the same applycal command as used during the last round of selfcal but with vis='source.ms', instead of vis='source coarse.ms'.
-Next task is to fill the model column of 'source.ms'. We use the same tclean command as used to create the final image but with the following changes: 
+Essentially, we use exactly the same applycal command as used during the last round of selfcal but with vis='source.ms', instead of vis='source_coarse.ms'.
+
+The next task is to fill the model column of 'source.ms'. We use the same tclean command as used to create the final image but with the following changes: 
 
 .. code-block::
 
@@ -923,17 +852,27 @@ Next task is to fill the model column of 'source.ms'. We use the same tclean com
    vis='source.ms'
    mask='' 
    imagenam ='images/savemodelrun'
-   startmodel='images/selfcal_5.model' 
+   startmodel='images/selfcal_6.model' 
    go
 
-Where, in startmodel, use the last selfcal run model. The tasks of uvsub and flagging on the target field is repeated for the source.ms file. A few rounds of rflags with higher constraints like timedev and freqdevscales of 4.5 can be applied if necessary. At this point, the data can be checked by plotting amp (corrected) vs frequency in source.ms file.
+Where, in startmodel, use the last selfcal run model. 
+
+Subtraction of continuum
+-------------------------
+
+Perform uvsub on source.ms file, which does the table operation
+corrected = corrected - model column, 
+subtracting the model solutions (which are essentially a model for the continuum sources) from the corrected data visibilities column.
+
 
 .. code-block::
 
-   tget uvsub 
+   tget uvsub      
    inp
-   vis='source.ms' 
+   vis='source.ms'
    go
+
+At this point, the data can be checked by plotting amp (corrected) vs frequency for the source.ms file.
 
 
 
@@ -942,20 +881,43 @@ Perform continuum subtraction using uvcontsub
 
 The continuum is subtracted from the visibilities of source.ms making sure to exclude HI channels.
 
+Note that the old task will be depreciated. If using the old task, follow the steps:
+
+.. code-block::
+
+   tget uvcontsub_old
+   inp
+   vis='source.ms'
+   fitorder=1
+   fitspw='0:0~209,0:271~511'
+   want_cont=True
+   excludechans = False
+   go
+
+For using the new task, follow:
+
 .. code-block::
 
    tget uvcontsub
    inp
    vis='source.ms'
+   outputvis='source_contsub.ms'
    fitorder=1
-   fitspw='0:0~230,0:290~511'
-   excludechans = False
+   datacolumn='corrected'
+   fitspec='0:0~209,0:271~511'
+   fitmethod='casacore'
+   writemodel=True
    go
 
-Excluding the HI channels from uvcontsub, which in this file lies between channel range 230 to 290. A fitorder of 1 is selected. After this, we have a new visibility file named source.ms.contsub, which is the subtracted visibilities. Generally we can make the cube from this file and extract the spectrum. But before that, flagging on this subtracted visibilities could be done. Ideally the same set of flagging process done during the selfcal process on source coarse.ms file should be repeated, for which one can follow the task created by Aditya Chowdhury, NCRA (https://github.com/chowdhuryaditya/repeatflag).
-The command to use is repeatflag(visfrom=’source coarse.ms’,visto=’source.ms’).
 
-Other way is to perform flagging by averaging, i.e. first average over all time (by large arbitrary value, say 1e8 s) and with iteration of baseline, browse through the amp (corrected) vs frequency for the source.ms.contsub visibilities. Flag the channels in baselines with unusually high amp, ideally the amplitudes must be close to 0 as they are subtracted visibilities. Next average channels (say 40) and browse through time vs amp (corrected) data with baseline iteration and flag faulty timestamps. This is also the standard procedure to reduce the ripples in baseline in the final spectra extratced from image cube
+For the tutorial dataset, please use the task uvcontsub_old.
+
+Excluding the HI channels from uvcontsub, which in this file lies between channel range 210 to 270. A fitorder of 1 is selected, which fits a straight line to the baseline and subtracts it out. After this, we have a new visibility file named source.ms.contsub (if you have used the old task), which is the subtracted visibility. 
+
+We are all set and can make the cube from this file and extract the spectrum. But before that, further fine flagging can be done on these subtracted visibilities could be done. If the selfcal process used coarser resolution file, the same set of flagging process done during the selfcal process on source coarse.ms file should be repeated, for which one can follow the task created by Aditya Chowdhury, NCRA (https://github.com/chowdhuryaditya/repeatflag).
+The command to use is repeatflag(visfrom=’source coarse.ms’,visto=’source.ms’). We skip this for the tutorial dataset.
+
+Another essential step is to perform flagging by averaging, i.e. average over time (by large arbitrary value, say 1e8 s) and with iteration of baseline, browse through the amp (corrected) vs frequency for the source.ms.contsub visibilities. Flag the channels in baselines with unusually high amp, ideally the amplitudes must be close to 0 as they are subtracted visibilities. Next average channels (say 40) and browse through time vs amp (corrected) data with baseline iteration and flag faulty timestamps. This is also the standard procedure to reduce the ripples in baseline in the final spectra extracted from image cube
 
 
 Make the image cube and extract the spectra
@@ -970,7 +932,8 @@ We need to run ``tclean`` with vis='source.ms', specmode='cube', niter=0. We als
    inp
    vis='source.ms.contsub'
    weighting='natural'
-   imsize=[256]
+   imsize=[720]
+   cell=['0.14 arcsec']
    outframe='bary'
    imagename = 'images/cube_1'
    gridder='standard'
@@ -978,10 +941,13 @@ We need to run ``tclean`` with vis='source.ms', specmode='cube', niter=0. We als
    uvrange='>1.5km'
    startmodel=''
    specmode='cube' 
+   mask=''
+   spw=''
+   niter=0
    go
 
 
-Parameters like rest frequency can be given as well, with  it being the expected frequecy of the line. The spectrum is extracted for the location where the target source lies using CASA ``imview``. This is done by first opening the cube images and then opening the final selfcal continuum image simultaneously in one imview window, and then place a dot right at the center of the source in the continuum image, and extract the spectrum at this point, using the "collapse" icon above.
+Parameters like rest frequency can be given as well, which is the expected frequency of the line. The spectrum is extracted for the location where the target source lies using CASA ``imview``. This is done by first opening the cube image and then opening the final selfcal continuum image simultaneously in one imview window, and then extract the spectrum across a single point at the brightest pixel of the source in the continuum image, using the "collapse" icon above.
 
 
 
