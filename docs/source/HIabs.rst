@@ -63,12 +63,6 @@ data from FITS to MS format. In our case the FITS file is already provided as "U
 
 The output file *1543+480.ms* file will contain your visibilities in MS format.
 
-.. figure:: /images/specline/importgmrtlog.png
-   :alt: Importgmrt log
-   :align: center
-   :scale: 70% 
-   
-   *Output of the task importgmrt in the logger and view of the terminal. We will ignore the warnings in the logger for this tutorial.*
 
 An alternative way to run the task is as follows:
 
@@ -104,7 +98,7 @@ The task listobs will provide a summary of the contents of your dataset in the l
    vis='1543+480.ms'
    go 
 
-.. figure:: /images/specline/listobslog.png
+.. figure:: /images/abs_line/listobs_log.png
    :alt: Listobs log 
    :align: center
    :scale: 70% 
@@ -145,12 +139,12 @@ It is good to set the inputs for a task to default before running it.
    default(plotms)
    plotms
 
-.. figure:: /images/specline/plotms_timerawdata.png
+.. figure:: /images/abs_line/plotms_timerawdata.png
    :alt: Plotms screenshot amp vs time
    :align: center
    :scale: 70% 
    
-   *Screenshot of plotms. Fields 0 and 1 for channel 400 and correlation rr are plotted. Left is the data using all uv plane, and right is excluding the short baselines uvrange < 1.5km. Note the cleaner data and lower RFI in the latter plot.*
+   *Screenshot of plotms. Fields 0 and 1 for channel 400 and correlation rr are plotted. Left is the data using all uv plane, and right excludes the short baselines uvrange < 1.5km. Note the cleaner data and lower RFI in the latter plot.*
 
 
 Flagging
@@ -212,21 +206,21 @@ signal. Thus we will flag the affected channels (may be individual or groups of 
 
 For the dataset given, upon plotting field id 0 with freq vs amp(data), we see that there is a RFI spike. Selecting the data points on the spike (see figure), and look up on the casa log. 
 
-.. figure:: /images/specline/rfi_spikes.png
+.. figure:: /images/abs_line/rfi_spikes.png
    :alt: Plotms screenshot rfi spike 1
    :align: center
    :scale: 70% 
    
    *Screenshot of RFI spikes. From the panel below in plotms, choose 'mark regions' and select a few points in spike.*
 
-.. figure:: /images/specline/rfi_spikes2.png
+.. figure:: /images/abs_line/rfi_spikes2.png
    :alt: Plotms screenshot rfi spike 2
    :align: center
    :scale: 70% 
    
    *After selection, choose the option 'locate' from panel below and check the log file.*
 
-.. figure:: /images/specline/rfi_spikes3.png
+.. figure:: /images/abs_line/rfi_spikes3.png
    :alt: Log screenshot rfi spike 3
    :align: center
    :scale: 70% 
@@ -259,7 +253,7 @@ Similarly, flag the other RFI spikes that are persistent. The RFI spikes need to
 
 Tick the reload option on plotms and plot again on the plotms to verify if the flagging is reflected.
 
-.. figure:: /images/specline/rfi_spikes_removed.png
+.. figure:: /images/abs_line/rfi_spikes_removed.png
    :alt: Plotms screenshot rfi spike removed
    :align: center
    :scale: 70% 
@@ -347,14 +341,14 @@ It is wise to keep track of the flagging percentage in the data. If too much dat
 
 In the plotms, plot amp vs uvdist with the corrected data column for the entire channel, and check the calibrator data starting with field 0. Inspect and flag the baselines that jump around too much from the pack. Ideally, the pack must be centred around an amp of 1, with the baselines staying in and around that value. If the entire line jumps from this median by a large amount, it can be flagged.
 
-In the following figure, we can see the flag percentage for each field.
 
-.. figure:: /images/specline/uvdistvsamp_before1.png
+
+.. figure:: /images/abs_line/uvdistvsamp_before1.png
    :alt: Plotms screenshot before flag calibration
    :align: center
    :scale: 70% 
    
-   *Screenshot of plotms for uvdist vs amp (corrected). Note that a few baselines are jumping.*
+   *Screenshot of plotms for uvdist vs amp (corrected). Note that there is a lot of bad data, and baselines are jumping.*
 
 As there are not many obvious visible bad data, we can run a round of automated flagger ``rflag`` on the calibrator fields.
 
@@ -370,7 +364,7 @@ As there are not many obvious visible bad data, we can run a round of automated 
 
 The plot is shown as below:   
 
-.. figure:: /images/specline/uvdistvsamp_after1.png
+.. figure:: /images/abs_line/uvdistvsamp_after1.png
    :alt: Plotms screenshot after flag calibration
    :align: center
    :scale: 70% 
@@ -413,14 +407,14 @@ The flux values assigned can be verified using the VLA calibrator manual, and th
    go
 
 
-As we have completed the setjy, the flux of flux calibrators, which was centred about 1, will now be centred on their respective flux values. Note that the standard, 'Perley-Butler 2017' identifies most of the flux calibrators used by uGMRT. Some calibrators may not be recognized, in which case the standard 'Stevens-Reynolds 2016' can be used. If the calibrator is still not recognized by these standards, the flux values need to be entered manually for the calibrator.
+As we have completed the setjy, the flux of flux calibrators, which was centred about 1, will now be centred on their respective flux values. Note that the standard, 'Perley-Butler 2017' identifies most of the flux calibrators uGMRT uses. Some calibrators may not be recognized, in which case the standard 'Stevens-Reynolds 2016' can be used. If the calibrator is still not recognized by these standards, the flux values need to be entered manually for the calibrator.
 
-.. figure:: /images/specline/setjy_3c48.png
+.. figure:: /images/abs_line/vla_cal_manual_setjy.png
    :alt: Log screenshot after setjy
    :align: center
    :scale: 70% 
    
-   *Screenshot of casa log for task setjy. Note that the assigned flux for the calibrator 3C286 is 21.71 Jy. Since the central frequency of our dataset is about 623 MHz, which is about 48.1 cm wavelength, from the VLA calibrator manual, we see that the flux value lies between the 20cm band and 90cm band.*
+   *VLA calibrator manual flux densities for calibrator 3C286. Note that the assigned flux for the calibrator 3C286 is 21.71 Jy. Since the central frequency of our dataset is about 623 MHz, which is about 48.1 cm wavelength, from the VLA calibrator manual, we see that the flux value lies between the 20cm band and 90cm band.*
 
 We would want to transfer the flux calibration solutions to the phase calibrator so that its flux can be calibrated and scaled. If the data has two or more flux calibrators, we may choose the brightest one having cleaner and lower flagged data to use as a reference to transfer the solutions from. To transfer the solution from flux calibrator field 0 to phase calibrator field 1:
 
@@ -436,6 +430,12 @@ We would want to transfer the flux calibration solutions to the phase calibrator
    go
 
 After the task ``fluxscale``, the reported flux density of the phase calibrator must be compared with the standard flux density from VLA calibrator manual. 
+
+.. figure:: /images/abs_line/fluxscale_phasecal_vla_cali.png
+   :alt: Log screenshot after setjy
+   :align: center
+   :scale: 70% 
+   *VLA calibrator manual flux densities for phase calibrator 1602+334.*
 
 
 Initial Bandpass calibration
@@ -473,6 +473,7 @@ The solutions are first applied to the flux calibrator field by applycal, and a 
    gaintable=['caltables/gainsol_1.apcal','caltables/bpass_1.bcal']
    go
 
+
    tget flagdata
    mode='rflag'
    spw=' '
@@ -485,16 +486,16 @@ The solutions are first applied to the flux calibrator field by applycal, and a 
 After this, the amp(corrected) vs frequency plot would look like the figure below, where the flux is peaked and centred around the limit set by setjy, and we see a band.
 
 
-.. figure:: /images/specline/field0_postinibpass_postrflag.png
+.. figure:: /images/abs_line/field0_post_inibpass_rflag.png
    :alt: Screenshot of the plotms after initial bpass and rflag
    :align: center
    :scale: 80% 
    
-   *Screenshot of amp(corrected) vs frequency on plotms.*
+   *Screenshot of amp(corrected) vs frequency on plotms for field 0.*
 
 Examine the bandpass table using ``plotms``. Choose the bandpass table bpass_1.bcal in data and check the plots Amp Vs Channels and Phase Vs Channels  iterated over antennas. Note that solution tables do not take uvrange or corr inputs on plotms.
 
-.. figure:: /images/specline/initialbpass_ampvsfreq.png
+.. figure:: /images/abs_line/initialbpass_ampvsfreq.png
    :alt: Screenshot of the plotms for bandpass table
    :align: center
    :scale: 80% 
@@ -585,16 +586,16 @@ The solutions are applied to all fields, including the target:
    field=''
    go
 
-The bandpass solution tables in plotms looks like the following, where amp vs freq and gain phase vs freq is plotted for the final bandpass solution table:
+The bandpass solution tables in plotms look like the following, where amp vs freq and gain phase vs freq are plotted for the final bandpass solution table:
  
-.. figure:: /images/specline/finalbpass_ampvsfreq.png
+.. figure:: /images/abs_line/finalbpass_ampvsfreq.png
    :alt: Screenshot of the plotms after final bpass amp vs freq
    :align: center
    :scale: 80% 
    
    *Screenshot of amp(data) vs frequency for the final bandpass solution table on plotms.*
 
-.. figure:: /images/specline/finalbpass_gainphasevsfreq.png
+.. figure:: /images/abs_line/finalbpass_gainphasevsfreq.png
    :alt: Screenshot of the plotms after final bpass gain phase vs freq
    :align: center
    :scale: 80% 
@@ -604,7 +605,7 @@ The bandpass solution tables in plotms looks like the following, where amp vs fr
 
 At this point, we should be able to see the spectral line features in plotms in the visibility domain upon plotting the target field amp (corrected) vs channel and averaging in time, scan and baselines. This helps us determine the channel number where the line is present and to choose a bunch of channels containing the entire line width to be used later in self-calibration to avoid cleaning these channels and potentially erasing the line features.
 
-.. figure:: /images/specline/postbpassavgtimebl.png
+.. figure:: /images/abs_line/postbpass_field2_avg.png
    :alt: Screenshot of the plotms after final bpass amp (corrected) vs chan with time and baseline averaging
    :align: center
    :scale: 80%
@@ -674,7 +675,7 @@ Self-calibration process
 
 This is an iterative process. The model from the first ``tclean`` is used to calibrate the data and the corrected data are then imaged to make a better model and the process is repeated. The order of the tasks is tclean, gaincal, applycal, tclean. In this section, we perform self-calibration on the source file (if a coarse file is created, these steps need to be done on that file and later transferred to the source file). In the following example, we perform it on the source file. A test dirty image can be created before the self-cal run to ensure the parameters are used in cleaning the image using the task "clean" and for self-cal cycles. The parameter uvtaper is found by plotting 'uvwave' vs amp in plotms for the visibility source.ms file and noting the distance where the tapering must be smoothed from, which would be some distance before the amp starts going to zero. 
 
-.. figure:: /images/specline/uvtaper.png
+.. figure:: /images/abs_line/uvtaper.png
    :alt: Screenshot of the plotms Amp Vs uvwave for uvtaper
    :align: center
    :scale: 80% 
@@ -710,7 +711,7 @@ The imsize is chosen such that it covers and images the FWHM of the primary beam
 
 The cleaning is done interactively by first masking the sources visible in the dialog view, and running the process again using the green arrow button (continue deconvolving with current clean regions) which continues the deconvolution with current clean channels in viewer GUI. We keep adding masks to any new source visible in each step and keep deconvolving until the target source noise level is reached, i.e. until the entire image looks like a uniform noise. The deconvolution is stopped at this point by clicking the red cross button. Then a round of phase-only cal is performed while selecting the same spw range and applying it to all channels. With the same parameters to task ``tclean``, following parameters are updated and subsequently the phase-only cal is done:
 
-.. figure:: /images/specline/intcleandialogbox.png
+.. figure:: /images/abs_line/intcleandialogbox.png
    :alt: Screenshot of the viewer dialog box GUI
    :align: center
    :scale: 80%
@@ -736,12 +737,12 @@ Note that the spectral line of interest lies near channel 230 in the full resolu
 
 The viewer GUI opens automatically, and we will see the following window. Here, the masking of sources is done by checking the 'add' option, drawing contours around the visible source, and double-clicking inside the region to save the mask. To delete a mask, check the 'erase' option, create the boundary around the mask you wish to remove and double-click inside the region.
 
-.. figure:: /images/specline/intcleangui.png
+.. figure:: /images/abs_line/intcleangui.png
    :alt: Screenshot of the viewer dialog GUI
    :align: center
    :scale: 80%
    
-   *Screenshot of casa viewer interactive windoow.*
+   *Screenshot of CASA viewer interactive window.*
 
 The phase-only cal is performed once the viewer GUI closes automatically after you stop the deconvolution when the image noise level is reached as follows:
 
@@ -821,6 +822,12 @@ Typically, 4 such rounds needs to be done. After this, we do an apcal (amplitude
 
 Create the final image using ``tclean`` task, either with interactive cleaning or without it. For the tutorial dataset, 4 rounds of phase-only selfcal and 2 rounds of amplitude and phase selfcal will suffice, taking us to an RMS noise levels close to 0.6 mJy.
 
+.. figure:: /images/abs_line/continuum_img.png
+   :alt: Screenshot of the viewer dialog GUI
+   :align: center
+   :scale: 80%
+   
+   *Final continuum image.*
 
 
 
@@ -917,7 +924,8 @@ Excluding the HI channels from uvcontsub, which in this file lies between channe
 We are all set and can make the cube from this file and extract the spectrum. But before that, further fine flagging can be done on these subtracted visibilities could be done. If the selfcal process used coarser resolution file, the same set of flagging process done during the selfcal process on source coarse.ms file should be repeated, for which one can follow the task created by Aditya Chowdhury, NCRA (https://github.com/chowdhuryaditya/repeatflag).
 The command to use is repeatflag(visfrom=’source coarse.ms’,visto=’source.ms’). We skip this for the tutorial dataset.
 
-Another essential step is to perform flagging by averaging, i.e. average over time (by large arbitrary value, say 1e8 s) and with iteration of baseline, browse through the amp (corrected) vs frequency for the source.ms.contsub visibilities. Flag the channels in baselines with unusually high amp, ideally the amplitudes must be close to 0 as they are subtracted visibilities. Next average channels (say 40) and browse through time vs amp (corrected) data with baseline iteration and flag faulty timestamps. This is also the standard procedure to reduce the ripples in baseline in the final spectra extracted from image cube
+Another essential step is to perform flagging by averaging, i.e. average over time (by large arbitrary value, say 1e8 s) and with iteration of baseline, browse through the amp (corrected) vs frequency for the source.ms.contsub visibilities. Flag the channels in baselines with unusually high amp, ideally the amplitudes must be close to 0 as they are subtracted visibilities. Next average channels (say 40) and browse through time vs amp (corrected) data with baseline iteration and flag faulty timestamps. This is also the standard procedure to reduce the ripples in baseline in the final spectra extracted from image cube.
+
 
 
 Make the image cube and extract the spectra
@@ -947,9 +955,22 @@ We need to run ``tclean`` with vis='source.ms', specmode='cube', niter=0. We als
    go
 
 
+.. figure:: /images/abs_line/cube_img.png
+   :alt: Screenshot of the viewer dialog GUI
+   :align: center
+   :scale: 80%
+   
+   *Cube at the channel where we expect the absorption line.*
+
+
 Parameters like rest frequency can be given as well, which is the expected frequency of the line. The spectrum is extracted for the location where the target source lies using CASA ``imview``. This is done by first opening the cube image and then opening the final selfcal continuum image simultaneously in one imview window, and then extract the spectrum across a single point at the brightest pixel of the source in the continuum image, using the "collapse" icon above.
 
-
+.. figure:: /images/abs_line/abs_line1.png
+   :alt: Screenshot of the viewer dialog GUI
+   :align: center
+   :scale: 80%
+   
+   *Spectrum extracted from the cube along the bright pixel of the source.*
 
 Acknowledgement: We thank Nissim Kanekar for providing the dataset used for this tutorial. We thank Narendra S. for preparing the tutorial and Balpreet Kaur, Aditya Chowdhury and Ruta Kale for editing it further. 
 
