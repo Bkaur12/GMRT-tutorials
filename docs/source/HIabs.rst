@@ -17,8 +17,8 @@ Introduction
 You need to have CASA installed on your machine. You also need the data to be 
 available on your disk.
 
-From the GMRT online archive you can download data in "lta" or "FITS" format. If you downloaded the data in lta format then you will need to do the following steps to convert it to FITS format. You can download the pre-compiled binary files "listscan" and "gvfits" from the observatory. The data can also be in "UVDATA" formate, which is a "FITS" format and hence the following steps can be used for this data type too.
-Note that the steps mentioned for file vis='example.ms' are more general, and the file mentioned for vis='0311.ms' is the particular dataset provided. 
+From the GMRT online archive, you can download data in "lta" or "FITS" format. If you downloaded the data in lta format then you will need to do the following steps to convert it to FITS format. You can download the pre-compiled binary files "listscan" and "gvfits" from the observatory. The data can also be in "UVDATA" format, which is a "FITS" format and hence the following steps can be used for this data type too.
+Note that the steps mentioned for file vis='example.ms' are more general, and the file mentioned for vis='1543+480.ms' is the particular dataset provided. 
 
 LTA to FITS conversion
 +++++++++++++++++++++++
