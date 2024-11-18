@@ -431,6 +431,7 @@ The flux values assigned can be verified using the VLA calibrator manual, and th
 
    tget applycal
    default
+   vis='1543+480.ms'
    field='0,1'
    gaintable=['caltables/gainsol_1.apcal']
    go
