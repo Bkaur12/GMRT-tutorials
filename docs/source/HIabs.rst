@@ -559,7 +559,7 @@ In the delay calibration as well a reference antenna is required. Here "C03" is 
    refant='C03'
    go
 
-Copying the solutions to a new table, we do a round of amp-phase gaincal with all calibrator fields and solution types of ’int’ or different interval sizes like ’2min’ can be explored.
+Examine the delay cal table by plotting it for amp (data) vs channel for field 0. Typically, the delay amplitude should be a few 100s of nanoseconds. Copying the solutions to a new table, we do a round of amp-phase gaincal with all calibrator fields and solution types of ’int’ or different interval sizes like ’2min’ can be explored.
 
 .. code-block::
 
@@ -572,7 +572,7 @@ Copying the solutions to a new table, we do a round of amp-phase gaincal with al
    spw='0:100'
    solint='int'
    minsnr=5.0
-   uvrange>'1.5km'
+   uvrange='>1.5km'
    field='0,1'
    gaintable=['caltables/delay.kcal']
    caltable='caltables/gainsol_int.apcal'
