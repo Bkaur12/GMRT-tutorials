@@ -104,6 +104,7 @@ The task listobs will provide a summary of the contents of your dataset in the l
    :scale: 70% 
    
    *Output of the task listobs in the logger.*
+   
 
 You can also choose to save the output to a text file so that you can refer to it when needed without having to run the task.
 
