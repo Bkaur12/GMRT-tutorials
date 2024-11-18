@@ -230,7 +230,7 @@ those produced by FM radio, mobile, satellite and aircraft communications. They 
 frequency channels with very high amplitudes. It is not easy to remove the RFI from such channels and recover our astronomical 
 signal. Thus, we will flag the affected channels (individual or a group of channels). There are many ways to flag RFI, such as manually inspecting the spectra or using automated flaggers that look for outliers based on thresholds.
 
-For the tutorial dataset given, upon plotting field ID 0 with freq vs amp(data), we see that there are a few RFI spikes. Select a few data points on the spike (see figure), and look up on the casa log. 
+For the tutorial dataset given, upon plotting field ID 0 with freq vs amp(data), with uvrange='>1.5km' and corr of rr, we see that there are a few RFI spikes. Select a few data points on the spike (see figure), and look up on the casa log. 
 
 .. figure:: /images/abs_line/rfi_spikes.png
    :alt: Plotms screenshot rfi spike 1
