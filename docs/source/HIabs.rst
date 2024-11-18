@@ -23,7 +23,7 @@ Note that the steps mentioned for file vis='example.ms' are more general, and th
 LTA to FITS conversion
 +++++++++++++++++++++++
 
-The GMRT data is available in raw telescope format, called LTA, which stands for long term accumulation. For the data to be converted to FITS format, listscan and gvfits are used. These binary executable can be downloaded from GMRT portal, and to be made an executable, the command "chmod +x" can be used as follows:
+The GMRT data is available in raw telescope format, called LTA, which stands for long term accumulation. For the data to be converted to FITS format, listscan and gvfits are used. This binary executable can be downloaded from GMRT portal, and to be made an executable, the command "chmod +x" can be used as follows:
 
 .. code-block:: 
    
@@ -48,9 +48,9 @@ The file TEST.FITS contains your visibilities in FITS format.
 FITS to MS conversion
 ++++++++++++++++++++++
 
-At this stage start CASA using the command ``casa`` on your terminal. You will be on the Ipython prompt and a logger window will appear. 
+At this stage, start CASA using the command ``casa`` on your terminal. You will be on the Ipython prompt, and a logger window will appear. 
 The remaining analysis will be done at the CASA Ipython prompt. We use the CASA task importgmrt to convert 
-data from FITS to MS format. In our case the FITS file is already provided as "UVDATA" file so we proceed with that FITS file.
+data from FITS to MS format. In our case, the FITS file is already provided, so we proceed with it.
 
 .. code-block::
 
@@ -70,12 +70,12 @@ An alternative way to run the task is as follows:
 
    importgmrt(fitsfile='1543+480.FITS',vis='1543+480.ms')
 
-For the tutorial, we will follow the first method. Note that instead of "tget importgmrt", the command "inp importgmrt" would also work based on the version of CASA you are using. For the later case, to run the command, instead of "go", the command "go importgmrt" should be used.
+For the tutorial, we will follow the first method. Note that instead of "tget importgmrt", the command "inp importgmrt" would also work based on the version of CASA you are using. For the latter case, to run the command, instead of "go", the command "go importgmrt" should be used.
 
-The MS format stores the visibility data in the form of a table. The *data* column contains the data. Operations 
-like calibration and deconvolution will produce additional columns such as the *corrected* and *model* data columns.
+The MS format stores the visibility data in the form of a table. The *data* column contains the data. Operations like calibration and deconvolution will produce additional columns, such as the *corrected* and *model* data columns.
 
-(Bonus) There can be cases where the data file contains multiple observations with two or more targets. In this case, we may wish to split the dataset containing only the target we are interested in, along with the calibrators related to it. For example, if we would like to split the fields ids 0,1,2 and 7 with channels from 1403 to 3450, it is done as follows:
+**Bonus example** 
+There can be cases where the data file contains multiple observations with two or more targets. In this case, we may wish to split the dataset containing only the target we are interested in, along with the calibrators related to it. For example, if we would like to split the fields ids 0,1,2 and 7 with channels from 1403 to 3450, it is done as follows:
 
 .. code-block::
 
@@ -117,21 +117,21 @@ You can also choose to save the output to a text file so that you can refer to i
 Note the scans, field IDs, source names, number of channels, total bandwidth, channel width and central frequency for your observations. Identify the science target, its corresponding flux calibrators and the phase calibrator. In the tutorial dataset, there are 512 channels in the band from 608 MHz to 641 MHz, giving a spectral resolution of 65.1 KHz.  
 Field IDs can be used in subsequent tasks to choose sources instead of their names (e.g., 3C48, 0311+430, etc.). In the tutorial dataset presented, a flux calibrator (3C286), phase calibrator (1602+334), and target (1543+480) are present, with field id 0, 1 and 2, respectively. 
 
-Using online databases like NASA NED or SIMBAD, we learn more about the target, for instance, its type, redshift, etc. From the redshift value, we can determine the frequency at which we expect the spectral line to be present. In the tutorial dataset given, the target 1543+480, also known as WISEA J154508.52+475154.6 (can be found from NED), is a Quasar (QSO) at a redshift of z=1.277. From this, using f' = fo/(1+z), where fo is the rest frequency of the line, 1420 MHz, we get the frequency at which the line should be, which comes out to be about 623.62 MHz. Note that this is a case where the absorbing (or emitting gas) is close to the background source. If the gas is present somewhere between us and the source/target, we won't be able to locate the frequency of the line in this way, as the redshift of the gas would be unknown.
+Using online databases like NASA NED or SIMBAD, we learn more about the target, such as its type, redshift, etc. From the redshift, we can determine the frequency at which we expect the spectral line to be present. In the tutorial dataset given, the target 1543+480, also known as WISEA J154508.52+475154.6 (can be found from NED), is a Quasar (QSO) at a redshift of z=1.277. From this, using f' = fo/(1+z), where fo is the rest frequency of the line, 1420 MHz, we get the frequency at which the line should be, which comes out to be about 623.62 MHz. Note that this is a case where the absorbing is close to the background source. If the gas is present somewhere between us and the source/target, we won't be able to locate the frequency of the line in this way, as the redshift of the gas would be unknown.
 
 The task ``plotms`` is used to plot the data. It opens a GUI in which you can choose to display portions of your data.
 Go through the help for plotms GUI in CASA documentation for more details on its usage (https://casadocs.readthedocs.io/en/v6.2.0/api/tt/casatasks.visualization.plotms.html).
-It is important to make a good choice of parameters to plot so that you do not end up asking to plot too much data simultaneously. Our aim is to inspect the data for non-working antennas. A good choice would be to limit the fields to calibrators, choosing a single channel plotting Amp vs. time, and iterating over antennas. 
-Another good plot for inspection is to choose a single antenna, select all the channels and plotting Amp vs. channel while iterating 
+It is important to make a good choice of parameters to plot so that you do not end up asking to plot too much data simultaneously. Our aim is to inspect the data for non-working antennas. A good choice would be to limit the fields to calibrators, choose a single channel plotting Amp vs. time, and iterate over antennas. 
+Another good plot for inspection is to choose a single antenna, select all the channels and plot Amp vs. channel while iterating 
 over baselines.
 
 .. admonition:: Note
 
-   For spectral line analysis, usually, the targets are point sources, and we do not require the use of data from central square baselines of    
+   For spectral line analysis, usually, the targets are point sources, and we do not require the use of data from closely spaced central square baselines of    
    uGMRT. This is because these are mostly relevant for imaging extended objects and are also prone to have higher RFIs (Radio frequency 
-   interferences). Hence they are omitted from the entire process by setting the condition uvrange='>1.5km' in the functions.
+   interferences). Hence, they are omitted from the entire process by setting the condition uvrange='>1.5km' in the functions.
 
-In plotms, to view the raw data as a function of time for a particular frequency, set spw as 0:400, uvrange as >1.5km and corr as rr. From the Axes tab, choose x-axis as time and data as amp. One can also iterate over antennas in the Page tab seen on the left of the plotms window should be selected. 
+In plotms, to view the raw data as a function of time for a particular frequency, say channel 400, set spw as 0:400, uvrange as >1.5km and corr as rr. From the Axes tab, choose x-axis as time and data as amp. One can also iterate over antennas in the Page tab seen on the left of the plotms window should be selected. 
 It is good to set the inputs for a task to default before running it.  
 
 .. code-block::
@@ -171,17 +171,43 @@ Usually, the first spectral channel is saturated. Thus, it is a good idea to fla
    cmdreason = 'badchan'
    go 
 
+Usually, it is wise to flag the first and last records of scan data, which is done as follows:
+
+.. code-block::
+
+   default(flagdata)
+   inp flagdata
+   vis = '1543+48.ms'
+   mode = 'quack'
+   quackmode = 'beg'
+   quackinterval = 10
+   savepars = True
+   cmdreason ='quackbeg'
+   go
+
+.. code-block::
+
+   default(flagdata)
+   inp flagdata
+   vis = '1543+48.ms'
+   mode = 'quack'
+   quackmode = 'endb'
+   quackinterval = 10
+   savepars = True
+   cmdreason ='quackend'
+   go
+
    
-In the next step, we would like to flag data on antennas that were not working.
-Using ``plotms``, plot the freq vs amp(data) with the iteration of antenna with uvrange>1.5 km, and note the behaviour for all the scans. The condition of uvrange>1.5 km is given so as to not use the central square baselines for spectral line imaging.
-Find out which antennas were not working. Non-working antennas *generally* show up as those having very small amplitude, even on bright calibrators, show no relative change of amplitude for calibrators and target sources and the phases towards calibrator sources on any given baseline will be randomly distributed between -180 to 180 degrees. If such antennas are found in the data, those can be flagged using 
+In the next step, we would like to flag antennas that were not working.
+Using ``plotms``, plot the freq vs amp(data) with the iteration of antenna, with uvrange>1.5 km, and note the behaviour for all the scans. The condition of uvrange>1.5 km ensures we do not use the central square baselines for spectral line imaging.
+Find out which antennas were not working. Non-working antennas *generally* show up as those having a very small relative amplitude, even on bright calibrators, show no relative change of amplitude for calibrators and target sources and the phases towards calibrator sources on any given baseline will be randomly distributed between -180 to 180 degrees. If such antennas are found in the data, those can be flagged using 
 the task ``flagdata``. 
 **Only an example is provided here - you need to locate the bad antennas in the tutorial data and flag those.** Remember also that some antennas may not be bad at all times. However, if an antenna stops working while on the target source, it can be difficult to find out. Thus, a decision should be made based on the secondary calibrator scans. Depending on when such antennas stopped working, you can choose to flag them for that duration. Check the two polarizations separately.
 
 Although ``plotms`` provides options for flagging data interactively, at this stage, we will choose to just locate the bad data and flag it 
  using the task ``flagdata``.
 
-The following command is an example where the three antennas, namely E02, S02 and W06, are non-functioning and are flagged. **For the dataset given to you, this may not be the case and hence check for bad antennas.** If all antennas are functioning, skip this step.
+The following command is an example where the three antennas, namely E02, S02 and W06, are non-functioning and are flagged. **For the dataset given to you, this may not be the case and hence check for bad antennas.** If all antennas are functioning, **skip** this step.
 
 
 .. code-block::
@@ -199,12 +225,12 @@ The following command is an example where the three antennas, namely E02, S02 an
 
 It is a good idea to review the inputs to the task using (``inp``) before running it.
 
-Radio Frequency Interference (RFI) are the manmade radio band signals that enter the data and are unwanted. Signals such as 
-those produced by satellites, aircraft communications are confined to narrow bands in the frequency and will appear as 
-frequency channels that have very high amplitudes. It is not easy to remove the RFI from such channels and recover our astronomical 
-signal. Thus we will flag the affected channels (may be individual or groups of channels). There are many ways to flag RFI - could be done manually after inspecting the spectra or using automated flaggers that look for outliers.
+Radio Frequency Interferences (RFI) are man-made radio band signals that enter the data and are unwanted. Signals such as 
+those produced by FM radio, mobile, satellite and aircraft communications. They are confined to narrow bands in frequency and will appear in 
+frequency channels with very high amplitudes. It is not easy to remove the RFI from such channels and recover our astronomical 
+signal. Thus, we will flag the affected channels (individual or a group of channels). There are many ways to flag RFI, such as manually inspecting the spectra or using automated flaggers that look for outliers based on thresholds.
 
-For the dataset given, upon plotting field id 0 with freq vs amp(data), we see that there is a RFI spike. Selecting the data points on the spike (see figure), and look up on the casa log. 
+For the tutorial dataset given, upon plotting field ID 0 with freq vs amp(data), we see that there are a few RFI spikes. Select a few data points on the spike (see figure), and look up on the casa log. 
 
 .. figure:: /images/abs_line/rfi_spikes.png
    :alt: Plotms screenshot rfi spike 1
@@ -227,7 +253,7 @@ For the dataset given, upon plotting field id 0 with freq vs amp(data), we see t
    
    *Screenshot of casa log. Note down the antenna baselines, scan number, channels, etc in which the RFI is present. We need to flag it.*
 
-Flag the corresponding channels/ baselines containing the RFI spikes individually. An example to flag a particular spike present in all fields at channel # 302 is shown below: 
+Flag the corresponding channels/ baselines containing the RFI spikes individually. An example to flag a particular spike present in **all fields** at channel # 302 is shown below: 
 
 .. code-block::
 
@@ -241,7 +267,7 @@ Flag the corresponding channels/ baselines containing the RFI spikes individuall
    go
    
 
-Similarly, flag the other RFI spikes that are persistent. The RFI spikes need to be carefully looked at, and only flag the essential faulty channels/baselines.
+Similarly, flag the other persistent RFI spikes. The RFI spikes need to be carefully looked at, and only the essential faulty channels/baselines need to be flagged. There may be cases where the RFI is transient, not present throughout the observation, and may not be present in all fields. These factors need to be carefully examined before flagging.
 
 .. code-block::
 
@@ -261,7 +287,8 @@ Tick the reload option on plotms and plot again on the plotms to verify if the f
    *Screenshot of plotms after flagging RFI spikes. Note that the spikes are no longer present, and the selected region can be unselected using the 'clear region' from the panel below.*
 
 
-(Bonus) If, for any reason, you flag the wrong data and want to reverse the flag, the command "flag manager" is used. 
+**Bonus example** 
+If, for any reason, you flag the wrong data and want to reverse the flag, the command "flag manager" is used. 
 
 .. code-block::
 
@@ -286,18 +313,18 @@ This displays the list of all flag operations performed. Note the flag version n
 
 
 
-Intital Gain calibration before flagging of unwanted data
+Initial Gain calibration before flagging unwanted data
 ---------------------------------------------------------
 
-Pick a clean line-free channel (or if many solutions fail due to low SNR, a bunch of channels which does not have any RFI and do not contain the target spectral line). This would act as a reference upon which gain calibration is done and later applied to all channels. The number of channels to be selected for averaging depends on SNR we require (if too many solutions fail and get flagged in gaincal for minsnr=5, average more channels to increase SNR). Typically, a single channel is chosen for this, say channel 100, hence the command spw='0:100'. 
-Create a directory for the solution tables and also one for images as follows (use "!" mark at the beginning if the commands are written at the casa ipython prompt):
+Pick a clean line-free channel (or if many gain solutions fail due to low SNR, a bunch of channels that do not have any RFI and do not contain the target spectral line). This would be a reference, which sets its gain amp as 1 and gain phase as zero, and the gain calibration is done relative to it and later applied to all channels. The number of channels to be selected for averaging depends on SNR we require (if too many solutions fail and get flagged in gaincal for minsnr=5, average more channels to increase SNR). If this fails as well, reduce the minsnr threshold. Typically, a single channel is chosen for this, say channel 100, hence the command spw='0:100'. 
+Create a directory for the solution tables and also one for images as follows (use "!" mark at the beginning if the commands are written within the casa ipython prompt):
 
 .. code-block::
 
    !mkdir caltables
    !mkdir images
 
-The field ID of the flux calibrator is 0, and that of the phase calibrator is 1. Hence the first round of initial gain calibration is done only on calibrators (and not on target) as follows:
+The field ID of the flux calibrator is 0, and that of the phase calibrator is 1. Hence, the first round of initial gain calibration is done only on calibrators (and **not on target**) as follows:
 
 .. code-block::
 
@@ -313,7 +340,7 @@ The field ID of the flux calibrator is 0, and that of the phase calibrator is 1.
    go
 
 
-Note that since the source would be a point source, we have excluded the short baselines by uvrange='>1.5km'. This is followed by an ``applycal``, applying the calibration to all the channels of calibrators.
+Note that since the source would be a point source, we have excluded the short baselines by uvrange='>1.5km'. This is followed by an ``applycal``, applying the calibration to all the channels of the calibrators only.
 
 .. code-block::
 
@@ -362,7 +389,7 @@ As there are not many obvious visible bad data, we can run a round of automated 
    go
 
 
-The plot is shown as below:   
+The plot is shown below:   
 
 .. figure:: /images/abs_line/uvdistvsamp_after1.png
    :alt: Plotms screenshot after flag calibration
@@ -371,7 +398,7 @@ The plot is shown as below:
    
    *Screenshot of plotms for uvdist vs amp (corrected). Note that most of the baselines are packed around amp = 1 with almost no outliers.*
 
-We need to check if amp and/or phase plotted w.r.to uvdist is flat because these are point sources at phase centre, so amp should not depend on uvdist, and phase should also not depend on uvdist. To summarize, check uvdist vs amp corrected plots, with antenna iteration and baseline colorization; or baseline iteration and antenna1/corr colorization, if required channels averaged, field by field with uvrange>1.5km. 
+We need to check if amp and/or phase plotted w.r.to uvdist is flat because these are point sources at phase centre, so amp should not depend on uvdist, and phase should also not depend on uvdist. To summarize, check uvdist vs amp corrected plots, with antenna iteration and baseline colourization or baseline iteration and antenna1/corr colourization, if required channels averaged, field by field with uvrange>1.5km. 
 
 
 Absolute flux density calibration
@@ -389,7 +416,7 @@ We use the task ``setjy`` to set the flux densities of the standard flux calibra
    usescratch=True
    go   
 
-The flux values assigned can be verified using the VLA calibrator manual, and the obtained value must be close to the wavelength band value from the manual where the spectral line is expected. For the calibrator in the tutorial dataset, we find that the setjy flux level is 21.71 Jy, which is close to the reference level in the calibrator manual. Now, we can perform the gain calibration on calibrators using the single channel (or a bunch of channels if used as explained earlier) and apply it to all the channels and fields except the target source. 
+The flux values assigned can be verified using the VLA calibrator manual, and the obtained value must be close to the wavelength band value from the manual where the spectral line is expected. For the calibrator in the tutorial dataset, we find that the setjy flux level is 21.71 Jy, which is close to the reference level in the calibrator manual. Now, we can perform the gain calibration on calibrators using the single channel (or a bunch of channels if used, as explained earlier) and apply it to all the channels and fields except the target source. 
 
 .. code-block::
 
@@ -455,7 +482,7 @@ By working out this math, we find that the phase cal is bright enough to be used
    inp
    vis='1543+480.ms'
    caltable='caltables/bpass_1.bcal'
-   refant='E03'
+   refant='C03'
    gaintable=['caltables/gainsol_1.apcal']
    field='0,1'
    minsnr=5.0
@@ -508,7 +535,7 @@ Note the shape of the band across the frequencies.
 Delay calibration and final Bandpass calibration
 ------------------------------------------------
 
-In the delay calibration as well a reference antenna is required. Here "E03" is only taken as an example. You may use any antenna that is working for the whole duration of the observation. We perform delay calibration only with flux calibrator field used for fluxscale and not with all calibrators.
+In the delay calibration as well a reference antenna is required. Here "C03" is only taken as an example. You may use any antenna that is working for the whole duration of the observation. We perform delay calibration only with flux calibrator field used for fluxscale and not with all calibrators.
 
 
 .. code-block::
@@ -521,7 +548,7 @@ In the delay calibration as well a reference antenna is required. Here "E03" is 
    field='0'
    gaintype='K'                                                        
    caltable='caltables/delay.kcal'                                     
-   refant='E03'
+   refant='C03'
    go
 
 Copying the solutions to a new table, we do a round of amp-phase gaincal with all calibrator fields and solution types of ’int’ or different interval sizes like ’2min’ can be explored.
@@ -538,7 +565,7 @@ Copying the solutions to a new table, we do a round of amp-phase gaincal with al
    solint='int'
    minsnr=5.0
    uvrange>'1.5km'
-   field='0'
+   field='0,1'
    gaintable=['caltables/delay.kcal']
    caltable='caltables/gainsol_int.apcal'
    go
@@ -571,7 +598,7 @@ The bandpass calibration solutions are found using all (if phase calibrator was 
    vis='1543+480.ms'
    field='0,1'
    combine=''
-   refant='E03'
+   refant='C03'
    minsnr=5.0
    gaintable=['caltables/delay.kcal','caltables/gainsol_int.apcal']
    caltable='caltables/bandpass_finalint.bcal' 
