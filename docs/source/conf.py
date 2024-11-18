@@ -7,7 +7,7 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'GMRT tutorials'
-copyright = '2022, Ruta Kale'
+copyright = '2024, Ruta Kale'
 author = 'Ruta Kale'
 release = '0.1'
 
