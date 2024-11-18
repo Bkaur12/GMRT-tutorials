@@ -454,15 +454,19 @@ We would want to transfer the flux calibration solutions to the phase calibrator
    fluxtable='caltables/gainsol_1.fcal'
    reference=['0']
    transfer=['1']
+   listfile=''
+   display=False
    go
 
 After the task ``fluxscale``, the reported flux density of the phase calibrator must be compared with the standard flux density from VLA calibrator manual. 
+
 
 .. figure:: /images/abs_line/fluxscale_phasecal_vla_cali.png
    :alt: Log screenshot after setjy
    :align: center
    :scale: 70% 
    *VLA calibrator manual flux densities for phase calibrator 1602+334.*
+
 
 
 Initial Bandpass calibration
