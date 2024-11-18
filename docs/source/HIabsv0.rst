@@ -5,7 +5,7 @@ Spectral line  data reduction using CASA (source 1543+480)
 
 The tutorial is intended to provide you an introduction to the basic steps involved in 
 the analysis of spectral line data from the GMRT. 
-We will be using a band-4 (550 - 750 MHz) dataset. 
+We will be using a band-4 (550 - 900 MHz) dataset. 
 In a targeted spectral line observation, one is already aware of the location of the line 
 in terms of frequency and the corresponding spectral channels. 
 
