@@ -726,6 +726,7 @@ Inputs to make a dirty image are given as follows, where the first two lines are
    !mkdir images
    !mkdir caltables   
    tget tclean
+   default
    inp
    vis='source.ms'  
    cell=['0.14 arcsec']
