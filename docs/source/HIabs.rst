@@ -722,6 +722,7 @@ Inputs to make a dirty image are given as follows, where the first two lines are
 
 .. code-block::
 
+   cd source
    !mkdir images
    !mkdir caltables   
    tget tclean
