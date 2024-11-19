@@ -371,7 +371,7 @@ In the plotms, plot amp vs uvdist with the corrected data column for the entire 
 
 
 
-.. figure:: /images/abs_line/uvdistvsamp_before1.png
+.. figure:: /images/abs_line/uvdist_plot_field1_before.png
    :alt: Plotms screenshot before flag calibration
    :align: center
    :scale: 70% 
@@ -392,7 +392,7 @@ As there are not many obvious visible bad data, we can run a round of automated 
 
 The plot is shown below:   
 
-.. figure:: /images/abs_line/uvdistvsamp_after1.png
+.. figure:: /images/abs_line/uvdist_plot_field1_after_rflag.png
    :alt: Plotms screenshot after flag calibration
    :align: center
    :scale: 70% 
