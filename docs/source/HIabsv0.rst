@@ -9,7 +9,7 @@ We will be using a band-4 (550 - 900 MHz) dataset.
 In a targeted spectral line observation, one is already aware of the location of the line 
 in terms of frequency and the corresponding spectral channels. 
 
-CASA version used for the tutorial: 6.5.2
+CASA version used for the tutorial: 6.6
 
 Introduction
 -------------
