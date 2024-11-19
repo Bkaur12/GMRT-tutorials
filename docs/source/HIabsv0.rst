@@ -462,7 +462,7 @@ In this step, an initial bandpass calibration is done on flux calibrators. We ca
 .. admonition:: Note
    For flux values of target: https://www.cv.nrao.edu/nvss/NVSSlist.shtml 
 
-By working out this math, we find that the phase cal is bright enough to be used in bandpass calibration. We included it in bandpass calibration along with flux calibrator as:
+By working out this math, we find that the phase cal is bright enough to be used in bandpass calibration. We include it in bandpass calibration along with flux calibrator as:
 
 .. code-block::
 
@@ -627,15 +627,6 @@ All the solutions including final gaincal, delay solutions, and the bandpass sol
    go
 
 
-At this point, we should be able to see the spectral line features in plotms in the visibility domain upon plotting the target field amp (corrected) vs channel and averaging in time, scan and baselines, with uvdist='>1.5km' and corr 'rr'. This helps us determine the channel number where the line is present and choose a bunch of channels containing the entire line width to be used later in self-calibration to avoid cleaning these channels and potentially erasing the line features.
-
-.. figure:: /images/abs_line/postbpass_field2_avg.png
-   :alt: Screenshot of the plotms after final bpass amp (corrected) vs chan with time and baseline averaging
-   :align: center
-   :scale: 80%
-   
-   *Screenshot of amp(corrected) vs frequency for the calibrated ms file with time and baseline averaging on plotms. Note the parameters set for the said averaging.*
-
 We run a round of automated 'rflag' on the source field to remove bad data.
 
 .. code-block::
@@ -648,6 +639,15 @@ We run a round of automated 'rflag' on the source field to remove bad data.
    timedevscale=4.5
    freqdevscale=4.5
    go
+
+At this point, we should be able to see the spectral line features in plotms in the visibility domain upon plotting the target field amp (corrected) vs channel and averaging in time, scan and baselines, with uvdist='>1.5km' and corr 'rr'. This helps us determine the channel number where the line is present and choose a bunch of channels containing the entire line width to be used later in self-calibration to avoid cleaning these channels and potentially erasing the line features.
+
+.. figure:: /images/abs_line/postbpass_field2_avg.png
+   :alt: Screenshot of the plotms after final bpass amp (corrected) vs chan with time and baseline averaging
+   :align: center
+   :scale: 80%
+   
+   *Screenshot of amp(corrected) vs frequency for the calibrated ms file with time and baseline averaging on plotms. Note the parameters set for the said averaging.*
 
 
 
@@ -669,35 +669,25 @@ Create a new directory named 'source'. We will split the target and save the new
    go
 
 
-If the data set is too large and has many channels of data, for instance, 2048 channels (standard uGMRT GWB data have a channel width of 12.207 kHz, giving a bandwidth of 25MHz for 2048 channels), to save on computation load and time, the file is can be further split into a lower resolution, the channel averaged coarse MS file upon which self-calibration task can be performed. For example, a 2048-channel source MS file can be split by channel averaging of 20 channels chosen arbitrarily, giving a low-resolution coarse file of about 101 channels.  For this, width = 20 must be given in task ``split``.
-Since our tutorial dataset contains 512 channels, we can skip this step. Following is an example depicting the splitting of an ms file into a coarser resolution file. Please skip this step for tutorial data.
-
-.. code-block::
-
-   cd source
-   tget split
-   default
-   inp
-   vis='example.ms'
-   outputvis='example_coarse.ms'
-   width=20
-   datacolumn='data'
-   go 
+If the data set is too large and has many channels of data, for instance, 2048 channels or more (standard uGMRT GWB data have a channel width of 12.207 kHz, giving a bandwidth of 25MHz for 2048 channels), to save on computation load and time, the file can be further split into a lower resolution, the channel averaged coarse MS file upon which self-calibration task can be performed. For example, a 2048-channel source MS file can be split by channel averaging of 20 channels chosen arbitrarily, giving a low-resolution coarse file. For example, an average with a width of 20 in the 'split' task will give us 102 channels.
+Since our tutorial dataset contains 512 channels, we can **skip** this step. 
 
 
-It is easier and faster to self-calibrate on a coarse file and later transfer the solutions to a higher resolution split file to proceed with imaging.
+It is easier and faster to self-calibrate on a coarse file and later transfer the solutions to the parent higher-resolution file to proceed with imaging.
 
 .. admonition: Note
    We have not taken any special note of the spectral line in steps till now. The channels 
-   containing the line must not be treated special and usual steps of flagging and initial calibration must be performed. The important 
-   deviation arrives during self-calibration, where we have to exclude the channel range where line features are present or expected to 
+   containing the line must not be treated as special, and the usual steps of flagging and initial calibration must be performed. The important 
+   deviation arrives during self-calibration, where we must exclude the channel range where line features are present or expected to 
    occur.
 
 
 Self-calibration process
 ------------------------
 
-This is an iterative process. The model from the first ``tclean`` is used to calibrate the data and the corrected data are then imaged to make a better model and the process is repeated. The order of the tasks is tclean, gaincal, applycal, tclean. In this section, we perform self-calibration on the source file (if a coarse file is created, these steps need to be done on that file and later transferred to the source file). In the following example, we perform it on the source file. A test dirty image can be created before the self-cal run to ensure the parameters are used in cleaning the image using the task "clean" and for self-cal cycles. The parameter uvtaper is found by plotting 'uvwave' vs amp in plotms for the visibility source.ms file and noting the distance where the tapering must be smoothed from, which would be some distance before the amp starts going to zero. 
+This is an iterative process. The model from the first ``tclean`` is used to calibrate the data and the corrected data are then imaged to make a better model and the process is repeated. The order of the tasks is tclean, gaincal, applycal, tclean. In this section, we perform self-calibration on the source file (if a coarse spectral resolution file is created, these steps need to be done on that file and later transferred to the source file). 
+In the following example for the tutorial dataset, we perform selfcal on the high-resolution source file. A test dirty image can be created before the self-cal run to determine the parameters are used in cleaning the image using the task "clean" and for self-cal cycles. 
+The parameter **uvtaper** is found by plotting 'uvwave' vs amp in plotms for the visibility source.ms file and noting the distance where the tapering must be smoothed from, which would be some distance before the amp starts going to zero. 
 
 .. figure:: /images/abs_line/uvtaper.png
    :alt: Screenshot of the plotms Amp Vs uvwave for uvtaper
@@ -706,12 +696,18 @@ This is an iterative process. The model from the first ``tclean`` is used to cal
    
    *Screenshot of amp(data) vs uvwave for ms file to determine the uvtaper parameter on plotms.*
 
-Inputs to make a dirty image are given as follows, where the first two lines are to create new directories for images and calibration tables:
+**Change directory to 'source' directory,** and make new directories for caltables and images. 
 
 .. code-block::
 
+   cd source
    !mkdir images
-   !mkdir caltables   
+   !mkdir caltables 
+
+Inputs to make a dirty image are given as follows, where the first two lines are to create new directories for images and calibration tables:
+
+.. code-block::
+ 
    tget tclean
    inp
    vis='source.ms'  
@@ -727,22 +723,22 @@ Inputs to make a dirty image are given as follows, where the first two lines are
    go
 
 
-The imsize is chosen such that it covers and images the FWHM of the primary beam. The cell size is chosen to be at least a third or more of the expected synthesized beam size. These can be determined from the antenna aperture and wavelength of observation and the longest baseline of uGMRT array, respectively.
+The 'imsize' is chosen so that it covers and images the FWHM of the primary beam. The cell size is chosen to be at least a third or more of the expected synthesized beam size. These can be determined from the antenna aperture and wavelength of observation and the longest baseline of uGMRT array, respectively.
 
 
 
-**Self-cal cycles:** We start by cleaning the image (deconvolving) by only selecting the channels that do not contain the line. This is done in the ``tclean`` by selecting spw range suitably. 
+**Self-cal cycles:** We start by cleaning the image (deconvolving) by **only selecting the channels that do not contain the line**. This is done in the ``tclean`` by selecting spw range suitably. 
 
-The cleaning is done interactively by first masking the sources visible in the dialog view, and running the process again using the green arrow button (continue deconvolving with current clean regions) which continues the deconvolution with current clean channels in viewer GUI. We keep adding masks to any new source visible in each step and keep deconvolving until the target source noise level is reached, i.e. until the entire image looks like a uniform noise. The deconvolution is stopped at this point by clicking the red cross button. Then a round of phase-only cal is performed while selecting the same spw range and applying it to all channels. With the same parameters to task ``tclean``, following parameters are updated and subsequently the phase-only cal is done:
+The cleaning is done interactively by first masking the sources visible in the dialog view, and running the process again using the green arrow button (continue deconvolving with current clean regions), which continues the deconvolution with current clean channels in the viewer GUI. We keep adding masks to any new source visible in each step and keep deconvolving until the target source noise level is reached, i.e. until the entire image looks like a uniform noise. The deconvolution is stopped at this point by clicking the red cross button. Then a round of phase-only cal is performed while selecting the same spw range and applying it to all channels. With the same parameters to task ``tclean``, following parameters are updated and subsequently, the phase-only cal is done:
 
 .. figure:: /images/abs_line/intcleandialogbox.png
    :alt: Screenshot of the viewer dialog box GUI
    :align: center
    :scale: 80%
    
-   *Screenshot of casa viewer interactive windoow dialog menu.*
+   *Screenshot of casa viewer interactive window dialog menu.*
 
-Note that the spectral line of interest lies near channel 230 in the full resolution source file, so we exclude the line and nearby continuum channels, picking a spectral window of spw='0:0~209,0:271~511' for the self-cal steps.
+Note that the spectral line of interest lies near channel 230 in the full-resolution source file, so we exclude the line and nearby continuum channels, picking a spectral window of spw='0:0~209,0:271~511' for the self-cal steps. **There is only one source in the field** for the given tutorial dataset, so we would require a single mask to cover the main source at the phase centre fully. Be cautious not to mask the spurious artefacts other than the main source, which could potentially ruin the continuum model.
 
 .. code-block::
 
@@ -768,11 +764,12 @@ The viewer GUI opens automatically, and we will see the following window. Here, 
    
    *Screenshot of CASA viewer interactive window.*
 
-The phase-only cal is performed once the viewer GUI closes automatically after you stop the deconvolution when the image noise level is reached as follows:
+For the phase-only and amplitude-phase gain calibration cycles, we again exclude the line channels. The phase-only cal is performed once the viewer GUI closes automatically after you stop the deconvolution when the image noise level is reached as follows:
 
 .. code-block::
 
    tget gaincal  
+   default
    inp
    vis='source.ms'
    caltable='caltables/selfcal_0.pcal'
@@ -791,7 +788,7 @@ The phase-only cal is performed once the viewer GUI closes automatically after y
    go
 
 
-This process of interactive tclean and phase-only calibration is done until there seems to be no improvement in noise levels of background RMS, which is found by drawing a rectangular region far from the source and looking at the RMS value of the background noise in the statistics tab. At this point, 4 times RMS is chosen as the threshold and a run of tclean is made with this threshold. This can be done either by setting interactive as False and specifically writing the threshold value as a command in tclean, or it can be set in the interactive mode and the central blue button can be pressed for automatic deconvolution until the set threshold level is reached. Finally, an amplitude and phase calibration (apcal) is performed before creating the final selfcal image. At each step, we just need to change the image name and update the mask for tclean, and for gaincal and applycal, change the gaintable and caltable names. Observe the background noise rms of the image using review, and take four times this value to set the threshold for ``clean ``.
+This process of interactive tclean and phase-only calibration is done until there seems to be no improvement in noise levels of background RMS, which is found by drawing a rectangular region far from the source and looking at the RMS value of the background noise in the statistics tab. At this point, 4 times the RMS is chosen as the threshold and a run of tclean is made with this threshold. This can be done either by setting interactive as False and specifically inputting the threshold value as a command in tclean, or it can be set in the interactive mode and the central blue button can be clicked for automatic deconvolution until the set threshold level is reached. Finally, an amplitude and phase calibration (apcal) is performed before creating the final selfcal image. At each step, we just need to change the image name and update the mask for tclean, and for gaincal and applycal, change the gaintable and caltable names. Observe the background noise RMS of the image using imview, and take four times this value to set the threshold for ``clean ``.
 
 For example, the cycles can be continued in the following manner:
 
@@ -827,7 +824,7 @@ For example, the cycles can be continued in the following manner:
    gaintable=['caltables/selfcal_2.pcal']
    go
 
-Typically, 4 such rounds needs to be done. After this, we do an apcal (amplitude and phase cal) with the same spw parameters and then final tclean. Make sure to enter the latest selfcal image name and caltables properly.
+Typically, 4 such rounds needs to be done. After this, we do an apcal (amplitude and phase cal) with the same spw parameters and then final tclean. Hence, you will, at this point, have four phase-only gain solution tables applied to the ms file. Make sure to enter the latest selfcal image name and caltables properly.
 
 .. code-block::
 
@@ -856,10 +853,141 @@ Create the final image using ``tclean`` task, either with interactive cleaning o
 
 
 
-Apply the calibration and fill the model column of source file
---------------------------------------------------------------
 
-If a coarse resolution file was used in selfcal. the final calibration table of the last selfcal run is applied to source.ms file. For example if the latest selfcal caltables is selfcal_5.apcal, then this is done as: (skip this step for tutorial dataset)
+Subtraction of continuum
+-------------------------
+
+Perform uvsub on source.ms file, which does the table operation
+corrected = corrected - model column, 
+subtracting the continuum model solutions (which are essentially a model for the continuum sources) from the corrected data visibilities column.
+
+
+.. code-block::
+
+   tget uvsub      
+   inp
+   vis='source.ms'
+   go
+
+At this point, the data can be checked by plotting amp(corrected) vs frequency for the source.ms file, with uvrange='>1.5km' and corr of 'rr'.
+
+
+
+Perform continuum subtraction using uvcontsub
+---------------------------------------------
+
+The continuum is subtracted from the visibilities of source.ms making sure to exclude HI channels.
+
+Note that the old task will be depreciated. If using the old task, follow the steps:
+
+.. code-block::
+
+   tget uvcontsub_old
+   inp
+   vis='source.ms'
+   fitorder=1
+   fitspw='0:0~209,0:271~511'
+   want_cont=True
+   excludechans = False
+   go
+
+For using the new task, please check the appendix section.
+
+Excluding the HI channels from uvcontsub, which in this file lies between channel range 210 to 270. A fitorder of 1 is selected, which fits a straight line to the baseline and subtracts it out. After this, we have a new visibility file named source.ms.contsub (if you have used the old task), which is the subtracted visibility. 
+
+We are all set and can make the cube from this file and extract the spectrum. 
+
+An essential step is to perform flagging by averaging, i.e. average over time (by large arbitrary value, say 1e8 s) and with iteration of baseline, browse through the amp (corrected) vs frequency for the source.ms.contsub visibilities. Flag the channels in baselines with unusually high amp, ideally the amplitudes must be close to 0 as they are subtracted visibilities. Next average channels (say 40) and browse through time vs amp (corrected) data with baseline iteration and flag faulty timestamps. This is also the standard procedure to reduce the ripples in baseline in the final spectra extracted from image cube.
+
+
+
+Make the image cube and extract the spectra
+-------------------------------------------
+
+The continuum image shows the source distribution in sky plane after averaging the frequencies. A cube has 3 axes, where one can probe in frequency as well, along with the sky plane. We would need to make an image cube to extract the line along the line of sight of the main source.
+We need to run ``tclean`` with vis='source.ms', specmode='cube', niter=0. We also need to put in all the usual parameters like cell, imsize, weighting, uvrange, uvtaper, as well as spectral-cube-related parameters such as start, nchan, width; one can leave the spectral line-related parameters to their default values if you want to image every single channel and at the highest possible spectral resolution. Also, it is typical to start by using natural weighting and then try other weighting schemes as per science goal requirements.
+
+
+.. code-block::
+
+   tget tclean 
+   inp
+   vis='source.ms.contsub'
+   weighting='natural'
+   imsize=[720]
+   cell=['0.14 arcsec']
+   outframe='bary'
+   imagename = 'images/cube_1'
+   gridder='standard'
+   savemodel='none'
+   uvrange='>1.5km'
+   startmodel=''
+   specmode='cube' 
+   mask=''
+   spw=''
+   niter=0
+   go
+
+
+The following image shows the angular extent of the absorbing gas at the line channels. 
+
+.. figure:: /images/abs_line/cube_img.png
+   :alt: Screenshot of the viewer dialog GUI
+   :align: center
+   :scale: 80%
+   
+   *Cube at the channel where we expect the absorption line.*
+
+
+**To extract the spectrum**
+The spectrum is extracted for the location where the target source lies using CASA ``imview``. This is done by first opening the cube image and then opening the final selfcal continuum image simultaneously in one imview window, and then extracting the spectrum across a single point at the brightest pixel of the source in the continuum image, using the "collapse" icon above.
+
+.. figure:: /images/abs_line/abs_line1.png
+   :alt: Screenshot of the viewer dialog GUI
+   :align: center
+   :scale: 80%
+   
+   *Spectrum extracted from the cube along the bright pixel of the source.*
+
+The line spectrum can be exported in text format using the save icon, which can be used for further analysis. The imview also has smoothing features, where you can smooth the spectra with different kernel sizes. 
+
+Happy line hunting!
+
+
+Appendix 
+-------
+
+**These steps are skipped for the tutorial**
+
+**Splitting ms file field-wise** 
+There can be cases where the data file contains multiple observations with two or more targets. In this case, we may wish to split the dataset containing only the target we are interested in, along with the calibrators related to it. For example, if we would like to split the fields ids 0,1,2 and 7 with channels from 1403 to 3450, it is done as follows:
+
+.. code-block::
+
+   tget split
+   vis=’example.ms’
+   outputvis='examplesplit.ms’
+   field=’0,1,2,7’
+   spw=’0:1403∼3450’
+   go 
+
+**Splitting the parent higher resolution file into a coarse resolution file for selfcalibration.**
+Following is an example depicting the splitting of an ms file into a coarser resolution file. Please skip this step for tutorial data.
+
+.. code-block::
+
+   tget split
+   default
+   inp
+   vis='example.ms'
+   outputvis='example_coarse.ms'
+   width=20
+   datacolumn='data'
+   go 
+
+**Apply the calibration and fill the model column of source file**
+
+If a coarse resolution file was used in selfcal, the final calibration table of the last selfcal run should be applied to source.ms file. For example if the latest selfcal caltables is selfcal_5.apcal, then this is done as:
 
 
 .. code-block::
@@ -886,46 +1014,13 @@ The next task is to fill the model column of 'source.ms'. We use the same tclean
    startmodel='images/selfcal_6.model' 
    go
 
-Where, in startmodel, use the last selfcal run model. 
-
-Subtraction of continuum
--------------------------
-
-Perform uvsub on source.ms file, which does the table operation
-corrected = corrected - model column, 
-subtracting the model solutions (which are essentially a model for the continuum sources) from the corrected data visibilities column.
+Where, in the startmodel, use the last selfcal run model. This fills the parent highresolution model column with the continuum model determined after selfcal process with the coarse resolution ms file. Once this is done, you can proceed with continuum subtraction using 'uvsub'.
 
 
-.. code-block::
+If the selfcal process used coarser resolution file, the same set of flagging process done during the selfcal process on source coarse.ms file should be repeated, for which one can follow the task created by Aditya Chowdhury (https://github.com/chowdhuryaditya/repeatflag).
+The command to use is repeatflag(visfrom=’source coarse.ms’,visto=’source.ms’). 
 
-   tget uvsub      
-   inp
-   vis='source.ms'
-   go
-
-At this point, the data can be checked by plotting amp (corrected) vs frequency for the source.ms file.
-
-
-
-Perform continuum subtraction using uvcontsub
----------------------------------------------
-
-The continuum is subtracted from the visibilities of source.ms making sure to exclude HI channels.
-
-Note that the old task will be depreciated. If using the old task, follow the steps:
-
-.. code-block::
-
-   tget uvcontsub_old
-   inp
-   vis='source.ms'
-   fitorder=1
-   fitspw='0:0~209,0:271~511'
-   want_cont=True
-   excludechans = False
-   go
-
-For using the new task, follow:
+**Using the new uvcontsub task** 
 
 .. code-block::
 
@@ -941,78 +1036,6 @@ For using the new task, follow:
    go
 
 
-For the tutorial dataset, please use the task uvcontsub_old.
-
-Excluding the HI channels from uvcontsub, which in this file lies between channel range 210 to 270. A fitorder of 1 is selected, which fits a straight line to the baseline and subtracts it out. After this, we have a new visibility file named source.ms.contsub (if you have used the old task), which is the subtracted visibility. 
-
-We are all set and can make the cube from this file and extract the spectrum. But before that, further fine flagging can be done on these subtracted visibilities could be done. If the selfcal process used coarser resolution file, the same set of flagging process done during the selfcal process on source coarse.ms file should be repeated, for which one can follow the task created by Aditya Chowdhury, NCRA (https://github.com/chowdhuryaditya/repeatflag).
-The command to use is repeatflag(visfrom=’source coarse.ms’,visto=’source.ms’). We skip this for the tutorial dataset.
-
-Another essential step is to perform flagging by averaging, i.e. average over time (by large arbitrary value, say 1e8 s) and with iteration of baseline, browse through the amp (corrected) vs frequency for the source.ms.contsub visibilities. Flag the channels in baselines with unusually high amp, ideally the amplitudes must be close to 0 as they are subtracted visibilities. Next average channels (say 40) and browse through time vs amp (corrected) data with baseline iteration and flag faulty timestamps. This is also the standard procedure to reduce the ripples in baseline in the final spectra extracted from image cube.
 
 
-
-Make the image cube and extract the spectra
--------------------------------------------
-
-We need to run ``tclean`` with vis='source.ms', specmode='cube', niter=0. We also need to put in all the usual parameters like cell, imsize, weighting, uvrange, uvtaper, as well as spectral-cube-related parameters such as start, nchan, width; one can leave the spectral line-related parameters to their default values if you want to image every single channel and at the highest possible spectral resolution. Also, it is typical to start by using natural weighting and then try other weighting schemes to see if the noise improves.
-
-
-.. code-block::
-
-   tget tclean 
-   inp
-   vis='source.ms.contsub'
-   weighting='natural'
-   imsize=[720]
-   cell=['0.14 arcsec']
-   outframe='bary'
-   imagename = 'images/cube_1'
-   gridder='standard'
-   savemodel='none'
-   uvrange='>1.5km'
-   startmodel=''
-   specmode='cube' 
-   mask=''
-   spw=''
-   niter=0
-   go
-
-
-.. figure:: /images/abs_line/cube_img.png
-   :alt: Screenshot of the viewer dialog GUI
-   :align: center
-   :scale: 80%
-   
-   *Cube at the channel where we expect the absorption line.*
-
-
-Parameters like rest frequency can be given as well, which is the expected frequency of the line. The spectrum is extracted for the location where the target source lies using CASA ``imview``. This is done by first opening the cube image and then opening the final selfcal continuum image simultaneously in one imview window, and then extract the spectrum across a single point at the brightest pixel of the source in the continuum image, using the "collapse" icon above.
-
-.. figure:: /images/abs_line/abs_line1.png
-   :alt: Screenshot of the viewer dialog GUI
-   :align: center
-   :scale: 80%
-   
-   *Spectrum extracted from the cube along the bright pixel of the source.*
-
-Acknowledgement: We thank Nissim Kanekar for providing the dataset used for this tutorial. We thank Narendra S. for preparing the tutorial and Balpreet Kaur, Aditya Chowdhury and Ruta Kale for editing it further. 
-
-
-Appendix
--------
-
-**Splitting ms file field-wise** 
-There can be cases where the data file contains multiple observations with two or more targets. In this case, we may wish to split the dataset containing only the target we are interested in, along with the calibrators related to it. For example, if we would like to split the fields ids 0,1,2 and 7 with channels from 1403 to 3450, it is done as follows:
-
-.. code-block::
-
-   tget split
-   vis=’example.ms’
-   outputvis='examplesplit.ms’
-   field=’0,1,2,7’
-   spw=’0:1403∼3450’
-   go 
-
-
-
+Acknowledgement: We thank Nissim Kanekar for providing the dataset used for this tutorial. We thank Narendra S, RRI for preparing the tutorial and Balpreet Kaur, Aditya Chowdhury and Ruta Kale for editing it further. 
