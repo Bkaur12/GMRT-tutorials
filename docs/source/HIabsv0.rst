@@ -1,6 +1,6 @@
 .. _HIabs:
 
-Spectral line  data reduction using CASA (source 1543+480)
+Spectral line  data reduction using CASA
 ========================================================
 
 The tutorial is intended to provide you an introduction to the basic steps involved in 
