@@ -52,6 +52,8 @@ At this stage, start CASA using the command ``casa`` on your terminal. You will 
 The remaining analysis will be done at the CASA Ipython prompt. We use the CASA task importgmrt to convert 
 data from FITS to MS format. In our case, the FITS file is already provided, so we proceed with it.
 
+It is a good idea to review the inputs to the task using (``inp``) before running it.
+
 .. code-block::
 
    casa
@@ -134,7 +136,7 @@ It is good to set the inputs for a task to default before running it.
    :align: center
    :scale: 70% 
    
-   *Screenshot of plotms. Fields 0 and 1 for channel 400 and correlation rr are plotted. Left is the data using all uv plane, and right excludes the short baselines uvrange < 1.5km. Note the cleaner data and lower RFI in the latter plot.*
+   *Screenshot of plotms. Fields 0 and 1 for channel 400 and correlation rr are plotted. Left is the data using all uv plane, and right excludes the short baselines uvrange < 1.5km. Note the cleaner data and lower RFI in amplitude dynamic range in the latter plot.*
 
 
 Flagging
@@ -161,7 +163,7 @@ Usually, the first spectral channel is saturated. Thus, it is a good idea to fla
    cmdreason = 'badchan'
    go 
 
-Usually, it is wise to flag the first and last records of scan data, which is done as follows:
+It is also wise to flag the first and last records of scan data, which is done as follows:
 
 .. code-block::
 
@@ -197,30 +199,15 @@ the task ``flagdata``.
 Although ``plotms`` provides options for flagging data interactively, at this stage, we will choose to just locate the bad data and flag it 
  using the task ``flagdata``.
 
-The following command is an example where the three antennas, namely E02, S02 and W06, are non-functioning and are flagged. **For the dataset given to you, this may not be the case and hence check for bad antennas.** If all antennas are functioning, **skip** this step.
+You will notice that the non-functioning antennas are already flagged in the tutorial dataset!
 
-
-.. code-block::
-
-   tget flagdata
-   default
-   inp 
-   vis = 'example.ms'
-   mode = 'manual'
-   antenna = 'E02, S02, W06'
-   savepars = True
-   cmdreason = 'badant'
-   inp
-   go 
-
-It is a good idea to review the inputs to the task using (``inp``) before running it.
 
 Radio Frequency Interferences (RFI) are man-made radio band signals that enter the data and are unwanted. Signals such as 
 those produced by FM radio, mobile, satellite and aircraft communications. They are confined to narrow bands in frequency and will appear in 
 frequency channels with very high amplitudes. It is not easy to remove the RFI from such channels and recover our astronomical 
 signal. Thus, we will flag the affected channels (individual or a group of channels). There are many ways to flag RFI, such as manually inspecting the spectra or using automated flaggers that look for outliers based on thresholds.
 
-For the tutorial dataset given, upon plotting field ID 0 with freq vs amp(data), we see that there are a few RFI spikes. Select a few data points on the spike (see figure), and look up on the casa log. 
+For the tutorial dataset given, upon plotting field ID 0 with freq vs amp(data) and uvdist='>1.5km', we see that there are a few RFI spikes. Select a few data points on the spike (see figure), and look up on the casa log. 
 
 .. figure:: /images/abs_line/rfi_spikes.png
    :alt: Plotms screenshot rfi spike 1
@@ -264,7 +251,10 @@ Similarly, flag the other persistent RFI spikes. The RFI spikes need to be caref
    tget flagdata
    default
    inp
+   mode='manual'
+   vis='1543+480.ms'
    spw='0:111,0:210,0:234,0:357,0:480'
+   savepars = True
    go
 
 Tick the reload option on plotms and plot again on the plotms to verify if the flagging is reflected.
@@ -277,7 +267,7 @@ Tick the reload option on plotms and plot again on the plotms to verify if the f
    *Screenshot of plotms after flagging RFI spikes. Note that the spikes are no longer present, and the selected region can be unselected using the 'clear region' from the panel below.*
 
 
-**Bonus example** 
+**Example (skip this step for tutorial)** 
 If, for any reason, you flag the wrong data and want to reverse the flag, the command "flag manager" is used. 
 
 .. code-block::
@@ -312,13 +302,13 @@ Create a directory for the solution tables and also one for images as follows (u
 .. code-block::
 
    !mkdir caltables
-   !mkdir images
 
 The field ID of the flux calibrator is 0, and that of the phase calibrator is 1. Hence, the first round of initial gain calibration is done only on calibrators (and **not on target**) as follows:
 
 .. code-block::
 
    tget gaincal
+   default
    inp
    vis='1543+480.ms'
    caltable='caltables/gainsol.apcal'
@@ -335,6 +325,7 @@ Note that since the source would be a point source, we have excluded the short b
 .. code-block::
 
    tget applycal
+   default
    inp
    vis='1543+480.ms'
    field='0,1'
@@ -355,8 +346,9 @@ It is wise to keep track of the flagging percentage in the data. If too much dat
    go
 
 
+You can check the flag percentage listed in the 'log' file.
 
-In the plotms, plot amp vs uvdist with the corrected data column for the entire channel, and check the calibrator data starting with field 0. Inspect and flag the baselines that jump around too much from the pack. Ideally, the pack must be centred around an amp of 1, with the baselines staying in and around that value. If the entire line jumps from this median by a large amount, it can be flagged.
+In the plotms, plot amp vs uvdist with the corrected data column for the entire channel, corr as rr and uvdist='>1.5km', and check the calibrator data starting with field 0. Inspect and flag the baselines that jump around too much from the pack. Ideally, the pack must be centred around an amp of 1, with the baselines staying in and around that value. If the entire line jumps from this median by a large amount, it can be flagged.
 
 
 
@@ -367,11 +359,12 @@ In the plotms, plot amp vs uvdist with the corrected data column for the entire 
    
    *Screenshot of plotms for uvdist vs amp (corrected). Note that there is a lot of bad data, and baselines are jumping.*
 
-As there are not many obvious visible bad data, we can run a round of automated flagger ``rflag`` on the calibrator fields.
+We can manually flag the bad baselines, or run a round of automated flagger ``rflag`` on the calibrator fields.
 
 .. code-block::
 
    tget flagdata
+   default
    vis='1543+480.ms'
    mode='rflag'
    field='0,1'
@@ -406,19 +399,24 @@ We use the task ``setjy`` to set the flux densities of the standard flux calibra
    usescratch=True
    go   
 
-The flux values assigned can be verified using the VLA calibrator manual, and the obtained value must be close to the wavelength band value from the manual where the spectral line is expected. For the calibrator in the tutorial dataset, we find that the setjy flux level is 21.71 Jy, which is close to the reference level in the calibrator manual. Now, we can perform the gain calibration on calibrators using the single channel (or a bunch of channels if used, as explained earlier) and apply it to all the channels and fields except the target source. 
+The flux values assigned can be verified using the VLA calibrator manual, and the obtained value must be close to the wavelength band value from the manual where the spectral line is expected. For the calibrator in the tutorial dataset, from the log, we find that the setjy flux level is 21.71 Jy, which is close to the reference level in the calibrator manual. Now, we can perform the gain calibration on calibrators using the single channel (or a bunch of channels if used, as explained earlier) and apply it to all the channels and fields except the target source. 
 
 .. code-block::
 
    tget gaincal
+   default
+   vis='1543+480.ms'
    field='0,1'
    caltable='caltables/gainsol_1.apcal'
    uvrange='>1.5km'
    spw='0:100'
    solint='int'
+   inp
    go
 
    tget applycal
+   default
+   vis='1543+480.ms'
    field='0,1'
    gaintable=['caltables/gainsol_1.apcal']
    go
@@ -438,6 +436,7 @@ We would want to transfer the flux calibration solutions to the phase calibrator
 .. code-block::
 
    tget fluxscale
+   default
    inp
    vis='1543+480.ms'
    caltable='caltables/gainsol_1.apcal'
@@ -446,7 +445,7 @@ We would want to transfer the flux calibration solutions to the phase calibrator
    transfer=['1']
    go
 
-After the task ``fluxscale``, the reported flux density of the phase calibrator must be compared with the standard flux density from VLA calibrator manual. 
+After the task ``fluxscale``, the reported flux density of the phase calibrator must be compared with the standard flux density from the VLA calibrator manual. We notice from the log file that the flux scale assigned to the phase calibrator is about 2.94 Jy.
 
 .. figure:: /images/abs_line/fluxscale_phasecal_vla_cali.png
    :alt: Log screenshot after setjy
@@ -484,6 +483,7 @@ The solutions are first applied to the flux calibrator field by applycal, and a 
 .. code-block::
 
    tget applycal
+   default
    inp
    vis='1543+480.ms'
    field='0'
@@ -493,14 +493,14 @@ The solutions are first applied to the flux calibrator field by applycal, and a 
 
    tget flagdata
    mode='rflag'
-   spw=' '
-   field='0'
+   spw=''
+   field='0,1'
    datacolumn='corrected'
    timedevscale=4.5
    freqdevscale=4.5
    go
 
-After this, the amp(corrected) vs frequency plot would look like the figure below, where the flux is peaked and centred around the limit set by setjy, and we see a band.
+After this, the amp(corrected) vs frequency plot with rr correlation and uvdist='>1.5km' would look like the figure below, where the flux is peaked and centred around the limit set by setjy, and we see a band.
 
 
 .. figure:: /images/abs_line/field0_post_inibpass_rflag.png
@@ -519,13 +519,13 @@ Examine the bandpass table using ``plotms``. Choose the bandpass table bpass_1.b
    
    *Screenshot of amp(data) vs frequency for the initial bandpass solution table on plotms.*
 
-Note the shape of the band across the frequencies.
+Note the shape of the band across the frequencies. Since the gain solutions were found relative to channel 100 (spw=0:100), the bandpass solutions too have a bandpass amplitude of 1 for this channel.
 
 
 Delay calibration and final Bandpass calibration
 ------------------------------------------------
 
-In the delay calibration as well a reference antenna is required. Here "C03" is only taken as an example. You may use any antenna that is working for the whole duration of the observation. We perform delay calibration only with flux calibrator field used for fluxscale and not with all calibrators.
+In the delay calibration as well, a reference antenna is required. Here "C03" is only taken as an example. You may use any antenna that is working for the whole duration of the observation. We perform delay calibration only with **flux calibrator field** used for fluxscale and not with all calibrators.
 
 
 .. code-block::
@@ -570,6 +570,11 @@ The task ``fluxscale`` is performed again on both the solutions with the same pa
 .. code-block::
 
    tget fluxscale
+   default
+   inp
+   vis='1543+480.ms'
+   reference=['0']
+   transfer=['1']
    caltable='caltables/gainsol_int.apcal'
    fluxtable='caltables/gainsol_int.fcal'
    go
@@ -594,14 +599,6 @@ The bandpass calibration solutions are found using all (if phase calibrator was 
    caltable='caltables/bandpass_finalint.bcal' 
    go
 
-The solutions are applied to all fields, including the target:
-
-.. code-block::
-
-   tget applycal
-   gaintable=['caltables/delay.kcal','caltables/bandpass_finalint.bcal','caltables/gainsol_int.fcal'] 
-   field=''
-   go
 
 The bandpass solution tables in plotms look like the following, where amp vs freq and gain phase vs freq are plotted for the final bandpass solution table:
  
@@ -620,7 +617,17 @@ The bandpass solution tables in plotms look like the following, where amp vs fre
    *Screenshot of gain phase(data) vs frequency for the final bandpass solution table on plotms.*
 
 
-At this point, we should be able to see the spectral line features in plotms in the visibility domain upon plotting the target field amp (corrected) vs channel and averaging in time, scan and baselines. This helps us determine the channel number where the line is present and to choose a bunch of channels containing the entire line width to be used later in self-calibration to avoid cleaning these channels and potentially erasing the line features.
+All the solutions including final gaincal, delay solutions, and the bandpass solutions are applied to all fields, including the target:
+
+.. code-block::
+
+   tget applycal
+   gaintable=['caltables/delay.kcal','caltables/bandpass_finalint.bcal','caltables/gainsol_int.fcal'] 
+   field=''
+   go
+
+
+At this point, we should be able to see the spectral line features in plotms in the visibility domain upon plotting the target field amp (corrected) vs channel and averaging in time, scan and baselines, with uvdist='>1.5km' and corr 'rr'. This helps us determine the channel number where the line is present and choose a bunch of channels containing the entire line width to be used later in self-calibration to avoid cleaning these channels and potentially erasing the line features.
 
 .. figure:: /images/abs_line/postbpass_field2_avg.png
    :alt: Screenshot of the plotms after final bpass amp (corrected) vs chan with time and baseline averaging
