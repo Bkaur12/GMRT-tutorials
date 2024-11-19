@@ -74,17 +74,6 @@ For the tutorial, we will follow the first method. Note that instead of "tget im
 
 The MS format stores the visibility data in the form of a table. The *data* column contains the data. Operations like calibration and deconvolution will produce additional columns, such as the *corrected* and *model* data columns.
 
-**Bonus example** 
-There can be cases where the data file contains multiple observations with two or more targets. In this case, we may wish to split the dataset containing only the target we are interested in, along with the calibrators related to it. For example, if we would like to split the fields ids 0,1,2 and 7 with channels from 1403 to 3450, it is done as follows:
-
-.. code-block::
-
-   tget split
-   vis=’example.ms’
-   outputvis='examplesplit.ms’
-   field=’0,1,2,7’
-   spw=’0:1403∼3450’
-   go 
 
 Data inspection
 ----------------
@@ -1001,5 +990,22 @@ Parameters like rest frequency can be given as well, which is the expected frequ
    *Spectrum extracted from the cube along the bright pixel of the source.*
 
 Acknowledgement: We thank Nissim Kanekar for providing the dataset used for this tutorial. We thank Narendra S. for preparing the tutorial and Balpreet Kaur, Aditya Chowdhury and Ruta Kale for editing it further. 
+
+
+Appendix
+-------
+
+**Splitting ms file field-wise** 
+There can be cases where the data file contains multiple observations with two or more targets. In this case, we may wish to split the dataset containing only the target we are interested in, along with the calibrators related to it. For example, if we would like to split the fields ids 0,1,2 and 7 with channels from 1403 to 3450, it is done as follows:
+
+.. code-block::
+
+   tget split
+   vis=’example.ms’
+   outputvis='examplesplit.ms’
+   field=’0,1,2,7’
+   spw=’0:1403∼3450’
+   go 
+
 
 
