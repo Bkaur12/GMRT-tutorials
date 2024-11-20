@@ -1000,7 +1000,7 @@ The following image shows the angular extent of the absorbing gas at the line ch
 
 
 **To extract the spectrum**
-The spectrum is extracted for the location where the target source lies using CASA ``imview``. This is done by first opening the cube image and then opening the final selfcal continuum image simultaneously in one imview window, and then extracting the spectrum across a single point at the brightest pixel of the source in the continuum image, using the "collapse" icon above.
+The spectrum is extracted for the location where the target source lies using CASA ``imview``. This is done by first opening the cube image and then opening the final selfcal continuum image simultaneously in one imview window, and then extracting the spectrum across a single point at the brightest pixel of the source in the continuum image, using the "Spectral Profile Tool" icon in the panel above.
 
 .. figure:: /images/abs_line/spec_from_cube.png
    :alt: Screenshot of the viewer dialog GUI
