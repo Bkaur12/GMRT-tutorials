@@ -908,9 +908,11 @@ The continuum is subtracted from the visibilities of source.ms making sure to ex
 
 Note that the old task will be depreciated. If using the old task, follow the steps:
 
+
+**If you are using casa 5.6**
 .. code-block::
 
-   tget uvcontsub_old
+   tget uvcontsub
    inp
    vis='source.ms'
    fitorder=1
@@ -919,7 +921,21 @@ Note that the old task will be depreciated. If using the old task, follow the st
    excludechans = False
    go
 
-For using the new task, please check the appendix section.
+
+**If you are using casa 6.6**
+
+.. code-block::
+
+   tget uvcontsub
+   inp
+   vis='source.ms'
+   outputvis='source_contsub.ms'
+   fitorder=1
+   datacolumn='corrected'
+   fitspec='0:0~209,0:271~511'
+   fitmethod='casacore'
+   writemodel=True
+   go
 
 Excluding the HI channels from uvcontsub, which in this file lies between channel range 210 to 270. A fitorder of 1 is selected, which fits a straight line to the baseline and subtracts it out. After this, we have a new visibility file named source.ms.contsub (if you have used the old task), which is the subtracted visibility. 
 
@@ -942,7 +958,7 @@ We need to run ``tclean`` with vis='source.ms', specmode='cube', niter=0. We als
    inp
    vis='source.ms.contsub'
    weighting='natural'
-   imsize=[720]
+   imsize=[360]
    cell=['0.14 arcsec']
    outframe='bary'
    imagename = 'images/cube_1'
@@ -1028,27 +1044,10 @@ If a coarse resolution file was used in selfcal, the final calibration table of 
 Essentially, we use exactly the same applycal command as used during the last round of selfcal but with vis='source.ms', instead of vis='source_coarse.ms'.
 
 
-
-Where, in the startmodel, use the last selfcal run model. This fills the parent highresolution model column with the continuum model determined after selfcal process with the coarse resolution ms file. Once this is done, you can proceed with continuum subtraction using 'uvsub'.
-
-
 If the selfcal process used coarser resolution file, the same set of flagging process done during the selfcal process on source coarse.ms file should be repeated, for which one can follow the task created by Aditya Chowdhury (https://github.com/chowdhuryaditya/repeatflag).
 The command to use is repeatflag(visfrom=’source coarse.ms’,visto=’source.ms’). 
 
-**Using the new uvcontsub task** 
 
-.. code-block::
-
-   tget uvcontsub
-   inp
-   vis='source.ms'
-   outputvis='source_contsub.ms'
-   fitorder=1
-   datacolumn='corrected'
-   fitspec='0:0~209,0:271~511'
-   fitmethod='casacore'
-   writemodel=True
-   go
 
 
 
