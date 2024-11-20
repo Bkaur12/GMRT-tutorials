@@ -781,6 +781,7 @@ For the phase-only and amplitude-phase gain calibration cycles, we again exclude
    go
    
    tget applycal 
+   default
    inp
    vis='source.ms'
    gaintable=['caltables/selfcal_0.pcal']
