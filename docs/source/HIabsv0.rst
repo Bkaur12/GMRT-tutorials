@@ -764,6 +764,13 @@ The viewer GUI opens automatically, and we will see the following window. Here, 
    
    *Screenshot of CASA viewer interactive window.*
 
+.. figure:: /images/abs_line/selfcal_mask.png
+   :alt: Screenshot of the viewer dialog GUI
+   :align: center
+   :scale: 80%
+   
+   *The tutorial dataset has a single main source at the phase centre. We need to mask only this main source and not mask the artefacts present.*
+
 For the phase-only and amplitude-phase gain calibration cycles, we again exclude the line channels. The phase-only cal is performed once the viewer GUI closes automatically after you stop the deconvolution when the image noise level is reached as follows:
 
 .. code-block::
@@ -864,7 +871,7 @@ Create the final image using ``tclean`` task, either with interactive cleaning o
    threshold='egmJy' #replace 'eg' with 4*RMS in mJy units
    go
 
-.. figure:: /images/abs_line/continuum_img.png
+.. figure:: /images/abs_line/cont_img.png
    :alt: Screenshot of the viewer dialog GUI
    :align: center
    :scale: 80%
@@ -995,7 +1002,7 @@ The following image shows the angular extent of the absorbing gas at the line ch
 **To extract the spectrum**
 The spectrum is extracted for the location where the target source lies using CASA ``imview``. This is done by first opening the cube image and then opening the final selfcal continuum image simultaneously in one imview window, and then extracting the spectrum across a single point at the brightest pixel of the source in the continuum image, using the "collapse" icon above.
 
-.. figure:: /images/abs_line/abs_line1.png
+.. figure:: /images/abs_line/spec_from_cube.png
    :alt: Screenshot of the viewer dialog GUI
    :align: center
    :scale: 80%
