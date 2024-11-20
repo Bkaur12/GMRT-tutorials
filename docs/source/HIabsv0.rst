@@ -801,7 +801,7 @@ For example, the cycles can be continued in the following manner:
    imagename='images/selfcal_1' 
    go
    
-   tget gaincal 
+   tget gaincal # second 'p' only cal
    caltable = 'caltables/selfcal_1.pcal' 
    go 
    
@@ -816,7 +816,7 @@ For example, the cycles can be continued in the following manner:
    mask = 'images/selfcal_1.mask' 
    go
    
-   tget gaincal
+   tget gaincal # third 'p' only cal
    inp
    caltable = 'caltables/selfcal_2.pcal'
    go
@@ -825,7 +825,18 @@ For example, the cycles can be continued in the following manner:
    gaintable=['caltables/selfcal_2.pcal']
    go
 
-Typically, 4 such rounds needs to be done. After this, we do an apcal (amplitude and phase cal) with the same spw parameters and then final tclean. Hence, you will, at this point, have four phase-only gain solution tables applied to the ms file. Make sure to enter the latest selfcal image name and caltables properly.
+Typically, four such rounds need to be done. You can set interactive=False and give a threshold for the clean. Open the latest selfcal image and find the image RMS (taking a rectangular region away from the source and checking RMS from the statistics window). The threshold would be four times the RMS. An example of this step is **(replace 'eg' with 4*RMS you obtain for your image)**
+
+.. code-block::
+
+   tget tclean
+   inp
+   imagename='images/selfcal_3' #enter appropriate image name
+   interactive=False
+   threshold='egmJy' #replace 'eg' with 4*RMS in mJy units
+   go
+
+After this, we do an 'ap' cal (amplitude and phase cal) with the same spw parameters and then final tclean. Hence, you will, at this point, have four phase-only gain solution tables applied to the ms file. Make sure to enter the latest selfcal image name and caltables properly.
 
 .. code-block::
 
