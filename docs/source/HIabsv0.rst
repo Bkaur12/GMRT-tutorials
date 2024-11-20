@@ -853,7 +853,16 @@ After this, we do an 'ap' cal (amplitude and phase cal) with the same spw parame
    gaintable=['caltables/selfcal_4.apcal'] 
    go
 
-Create the final image using ``tclean`` task, either with interactive cleaning or without it. For the tutorial dataset, 4 rounds of phase-only selfcal and 2 rounds of amplitude and phase selfcal will suffice, taking us to an RMS noise levels close to 0.6 mJy.
+Create the final image using ``tclean`` task, either with interactive cleaning or without it. For the tutorial dataset, 4 rounds of phase-only selfcal and 2 rounds of amplitude and phase selfcal will suffice, taking us to an RMS noise levels close to about 0.6 mJy.
+
+.. code-block::
+
+   tget tclean
+   inp
+   imagename='images/selfcal_6' #enter appropriate image name
+   interactive=False
+   threshold='egmJy' #replace 'eg' with 4*RMS in mJy units
+   go
 
 .. figure:: /images/abs_line/continuum_img.png
    :alt: Screenshot of the viewer dialog GUI
@@ -901,8 +910,8 @@ At this point, the data can be checked by plotting amp(corrected) vs frequency f
 
 
 
-Perform continuum subtraction using uvcontsub
----------------------------------------------
+Fit to baseline using uvcontsub
+-------------------------------
 
 The continuum is subtracted from the visibilities of source.ms making sure to exclude HI channels.
 
