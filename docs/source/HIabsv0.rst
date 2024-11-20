@@ -863,7 +863,23 @@ Create the final image using ``tclean`` task, either with interactive cleaning o
    *Final continuum image.*
 
 
+Fill the model column
+-------------------------
 
+The next task is to fill the model column for 'source.ms' file, where we apply the model to 'all' the channels. We use the same tclean command as used to create the final image but with the following changes: 
+
+.. code-block::
+
+   tget tclean
+   inp
+   niter=0 
+   spw=''
+   uvrange=''
+   vis='source.ms'
+   mask='' 
+   imagename ='images/savemodelrun'
+   startmodel='images/selfcal_6.model'  # give the appropriate image model name from your latest image
+   go
 
 
 Subtraction of continuum
@@ -1011,20 +1027,7 @@ If a coarse resolution file was used in selfcal, the final calibration table of 
 
 Essentially, we use exactly the same applycal command as used during the last round of selfcal but with vis='source.ms', instead of vis='source_coarse.ms'.
 
-The next task is to fill the model column of 'source.ms'. We use the same tclean command as used to create the final image but with the following changes: 
 
-.. code-block::
-
-   tget tclean
-   inp
-   niter=0 
-   spw=''
-   uvrange=''
-   vis='source.ms'
-   mask='' 
-   imagenam ='images/savemodelrun'
-   startmodel='images/selfcal_6.model' 
-   go
 
 Where, in the startmodel, use the last selfcal run model. This fills the parent highresolution model column with the continuum model determined after selfcal process with the coarse resolution ms file. Once this is done, you can proceed with continuum subtraction using 'uvsub'.
 
