@@ -729,7 +729,7 @@ The 'imsize' is chosen so that it covers and images the FWHM of the primary beam
 
 **Self-cal cycles:** We start by cleaning the image (deconvolving) by **only selecting the channels that do not contain the line**. This is done in the ``tclean`` by selecting spw range suitably. 
 
-The cleaning is done interactively by first masking the sources visible in the dialog view, and running the process again using the green arrow button (continue deconvolving with current clean regions), which continues the deconvolution with current clean channels in the viewer GUI. We keep adding masks to any new source visible in each step and keep deconvolving until the target source noise level is reached, i.e. until the entire image looks like a uniform noise. The deconvolution is stopped at this point by clicking the red cross button. Then a round of phase-only cal is performed while selecting the same spw range and applying it to all channels. With the same parameters to task ``tclean``, following parameters are updated and subsequently, the phase-only cal is done:
+The cleaning is done interactively by first masking the sources visible in the dialog view, and running the process again using the green arrow button (continue deconvolving with current clean regions), which continues the deconvolution with current clean channels in the viewer GUI. We keep adding masks to any new source visible in each step and keep deconvolving until the target source noise level is reached, i.e. until the entire image looks like a uniform noise. The deconvolution is stopped at this point by clicking the red cross button. Then, a round of phase-only cal is performed while selecting the same spw range and applying it to all channels. With the same parameters to task ``tclean``, following parameters are updated and subsequently, the phase-only cal is done:
 
 .. figure:: /images/abs_line/intcleandialogbox.png
    :alt: Screenshot of the viewer dialog box GUI
@@ -739,6 +739,13 @@ The cleaning is done interactively by first masking the sources visible in the d
    *Screenshot of casa viewer interactive window dialog menu.*
 
 Note that the spectral line of interest lies near channel 230 in the full-resolution source file, so we exclude the line and nearby continuum channels, picking a spectral window of spw='0:0~209,0:271~511' for the self-cal steps. **There is only one source in the field** for the given tutorial dataset, so we would require a single mask to cover the main source at the phase centre fully. Be cautious not to mask the spurious artefacts other than the main source, which could potentially ruin the continuum model.
+
+.. figure:: /images/abs_line/selfcal_mask.png
+   :alt: Screenshot of the viewer dialog GUI
+   :align: center
+   :scale: 80%
+   
+   *The tutorial dataset has a single main source at the phase centre. We need to mask only this main source and not mask the artefacts present.*,
 
 .. code-block::
 
@@ -764,12 +771,7 @@ The viewer GUI opens automatically, and we will see the following window. Here, 
    
    *Screenshot of CASA viewer interactive window.*
 
-.. figure:: /images/abs_line/selfcal_mask.png
-   :alt: Screenshot of the viewer dialog GUI
-   :align: center
-   :scale: 80%
-   
-   *The tutorial dataset has a single main source at the phase centre. We need to mask only this main source and not mask the artefacts present.*
+
 
 For the phase-only and amplitude-phase gain calibration cycles, we again exclude the line channels. The phase-only cal is performed once the viewer GUI closes automatically after you stop the deconvolution when the image noise level is reached as follows:
 
