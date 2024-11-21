@@ -3,9 +3,10 @@
 Pulsar General Data Analysis
 ----------------------------
 
+..
 The tutorial is intended to provide you with a basic introduction to the steps involved in the general analysis of pulsar data, including searching for giant pulses or transient events and timing a newly discovered pulsar. The filterbank data obtained from GMRT are converted to SIGPROC filterbank format using either the filterbank command from SIGPROC or the rficlean command from RFIClean. The tutorial will use data already converted to the SIGPROC filterbank format.
 
-This part of the tutorial aims to demonstrate the process of pulsar detection using observations from GMRT. We will use band-4 (550-750 MHz) data of a test pulsar.
+This part of the tutorial aims to demonstrate the process of pulsar detection and determining its properties using observations from GMRT. We will use band-4 (550-750 MHz) data of a test pulsar.
 
 Introduction
 ~~~~~~~~~~~~~
@@ -24,7 +25,7 @@ The header information of the data from a SIGPROC filterbank file can be inspect
    
    *Example of a filterbank header*
 
-Data check
+Data inspection
 ~~~~~~~~~~~~~
 
 A section of the raw data can be inspected by plotting the data as a function of time and frequency, e.g., using the waterfaller.py command from PRESTO. The command waterfaller.py has several provisions that enable inspecting the data in several ways (e.g., before and after dedispersion, partial and full averaging over the bandwidth, etc.)
