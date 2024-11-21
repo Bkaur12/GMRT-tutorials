@@ -114,7 +114,7 @@ Goals for individual tutorial sessions
 
 7. Find the non-working antennas. Follow the section on "Flagging" to flag them.
 
-22 Nov 2024: 15:30 - 18:00 (Flagging, Calibration)
+22 Nov 2024: 15:30 - 18:00 (Flagging and Calibration)
 -----------------
 
 1. Keep CASA documentation open in a browser to read about the tasks that you will be running.
@@ -123,13 +123,50 @@ Goals for individual tutorial sessions
 
 3. Follow the steps for calibration and apply the calibration to the calibrator sources.
 
-4. Do additional flagging based on the visualization of the calibrated data on calibrators.
+4. Do additional flagging based on the visualization of the calibrated data on calibrators. Can you make out the changes that calibration did ?
 
 5. You can rerun the calibration steps - you need to give new names to the gain tables.
 
 6. Apply calibration to the target source and examine that data.
 
 7. Do additional flagging on the calibrated target source data.
+
+25 Nov 2024: 09:30 - 11:00 (Making a dirty image)
+-----------------
+1. Average the data in frequencies to reduce the data volume. Remember bandwidth average smearing !
+
+2. Examine the average data. Do additional flagging on these data.
+
+3. Calculate cellsize and imsize appropriate for the given data. Read the tclean help to understand the settings.
+
+4. Run tclean with niter 0 to produce a dirty image. Do you see sources in the dirty image ?
+
+25 Nov 2024: 11:30 - 12:30 (Making the first cleaned image)
+------------------
+1. Use tclean to produce your first cleaned image. Keep interactive = True and try an interactive tclean to understand masking.
+
+2. Read the tclean logger messages to understand the process.
+
+25 Nov 2024: 14:00 - 18:00 (Self-calibration iteraions)
+------------------
+
+1. Use the first cleaned image for self-calibration. Use gaincal with appropriate settings for solution interval.
+
+2. Use applycal and proceed to make a new image.
+
+3. Follow the tutorial to carry out self-calibration. Subsequent imaging steps will be time consuming. Take the opportunity 
+to read the CASA documentation.
+
+4. Go through at least two rounds of phase only self-calibration.
+
+26 Nov 2024: 11:30 - 12:30 (Introduction to spectral line tutorial)
+
+27 Nov 2024: Pulsar tutorial
+------------------------
+
+28 Nov 2024 and 29 Nov 2024
+------------------------
+Focus on any unfinished tutorial and aim to complete. Go into more details on the topic of your interest (spectral line/continuum/pulsars).
 
 
 
