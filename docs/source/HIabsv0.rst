@@ -926,6 +926,7 @@ Note that the old task will be depreciated. If using the old task, follow the st
 
 
 **If you are using casa 5.6**
+
 .. code-block::
 
    tget uvcontsub
@@ -996,7 +997,7 @@ The following image shows the angular extent of the absorbing gas at the line ch
    :align: center
    :scale: 80%
    
-   *Cube at the channel where we expect the absorption line.*
+   *Image from the cube at the single channel where we expect the absorption line. The bluish blob at the center is the angular extent of the source where HI is getting absorbed.*
 
 
 **To extract the spectrum**
