@@ -3,9 +3,6 @@
 Pulsar General Data Analysis
 ----------------------------
 
-..
- The tutorial is intended to provide you with a basic introduction to the steps involved in the general analysis of pulsar data, including searching for giant pulses or transient events and timing a newly discovered pulsar. The filterbank data obtained from GMRT are converted to SIGPROC filterbank format using either the filterbank command from SIGPROC or the rficlean command from RFIClean. The tutorial will use data already converted to the SIGPROC filterbank format.
-
 This part of the tutorial aims to demonstrate the process of pulsar detection and determining its properties using observations from GMRT. We will use band-4 (550-750 MHz) data of a test pulsar.
 
 Introduction
@@ -134,10 +131,9 @@ The equation to be used is known as the radiometer equation.
 
 Flux  (in Jansky) = SNR x RMS
 
+Where RMS is [T_sys/(G x Antenna factor)] x [1/sqrt(nPol x bandwidth x duration)] x sqrt[W/(P-W)], which has units of Jansky and SNR is the ratio of signal to noise which makes it unitless. T_sys is the antenna temperature (Kelvin; K) and G is the gain of each antenna which has units of K Jy^(-1), nPol is the number of polarizations, and W and P are the pulse width and the period of pulsar, respectively.
 
-Where RMS is the $\\frac{T_{\\text{sys}}}{G} \\times \\frac{1}{\\sqrt{\\text{number of polarizations} \\times \\text{bandwidth} \\times \\text{time interval} \\times \\text{antenna samplings}}} \\times \\sqrt{\\frac{W}{P-W}}$ ($W$ and $P$ are the width and the period of pulsar), which has units of Jansky and SNR is the ratio of signal to noise which makes it unitless (T_sys is the antenna temperature (Kelvin: K) and G is the gain of each antenna which has units of K Jy-1.
-
-Antenna samplings in the above formulae depend on the type of beam used (IA: incoherent array or PA: phased array). For IA the value of antenna samplings would be the total number of antennas (N), in the case of PA the value is N(N-1)/2.
+Antenna factor in the above formula depends on the type of beam used (IA: incoherent array or PA: phased array). For PA the value of antenna factor would be the total number of antennas (N), in the case of IA the value is sqrt(N).
 
 
 Scintillation
