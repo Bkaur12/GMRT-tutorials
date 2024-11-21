@@ -7,7 +7,7 @@ The tutorial is intended to provide you an introduction to the basic steps invol
 the analysis of continuum data from the GMRT. We will be using a band-4 (550 - 750 MHz) 
 dataset.
 
-CASA version used for the tutorial: 6.5.2
+CASA versions used for the tutorial: 6.5.2/6.6.4
 
 Introduction
 -------------
