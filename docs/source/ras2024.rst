@@ -16,21 +16,13 @@ Information about the file structure:
 The folder /data contains the following files:
 
 carta-v4.1.0-x86_64.AppImage 
-
 casa-release-5.6.0-60.el7  
-
 pulsar_timing
-
 casa-6.6.4-34-py3.8.el7       
-
 CASA-tutorial-data     
-
 start.sh
-
 casadata              
-
 pgplot.xwd         
-
 ugmrt_pb
 
 DO NOT modify the files in this folder (/data).
