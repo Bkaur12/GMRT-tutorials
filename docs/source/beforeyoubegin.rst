@@ -15,6 +15,8 @@ You need to download and install CASA. It is important to read the CASA `documen
 starting the tutorials. The specific CASA version in which the tutorial was prepared is provided at the beginning 
 of the individual tutorials.
 
+The participants of Radio Astronomy School 2024 will follow the instructions on the following link for the tutorials held in the E-lab: `RAS2024`_ 
+
 Pulsar/Beam data
 -----------------
 
@@ -39,3 +41,4 @@ dependencies.
 .. _AIPS: http://www.aips.nrao.edu/index.shtml
 .. _documentation: https://casadocs.readthedocs.io/en/stable/api/casatasks.html
 .. _usage: https://casadocs.readthedocs.io/en/stable/notebooks/usingcasa.html
+.. _RAS2024: https://gmrt-tutorials.readthedocs.io/en/latest/ras2024.html
