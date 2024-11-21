@@ -94,9 +94,45 @@ In the task 'importgmrt' provide the full
 path, fitsfile ='/data/CASA-tutorial-data/SGRB-DATA.FITS'.
 Follow the instructions in the tutorial to proceed.
 
-Image visualisation using CARTA
-------------------
+Goals for individual tutorial sessions
+-----------------
 
-For viewing the images created in CASA you can use
-CARTA. It can be opened from the command line using
-the command "carta".
+21 Nov 2024: 17:00 - 18:30 (Data visualisation and flagging)
+-----------------
+
+1. Login to the desktop and set up CASA.
+
+2. Start to follow the "Continuum data reduction" tutorial. Open the CASA documentation int he browser and read the documentation for every task carefully before running the task.
+
+3. You have been provided with the FITS file already, so you start from the FITS to MS conversion step.
+
+4. In the task 'importgmrt' remember to provide the path to the data as instructed above.
+
+5. Use the task 'listobs' and learn about the data (calibrators, target source, observing frequency, bandwidth, observing time). Calculate the expected rms sensitivity in the image.
+
+6. Use the task 'plotms' - familiarise yourself with the GUI options. If you try to load the entire dataset, the task may crash. Thus learn to make an informed choice of data for plotting.
+
+7. Find the non-working antennas. Follow the section on "Flagging" to flag them.
+
+22 Nov 2024: 15:30 - 18:00 (Flagging, Calibration)
+-----------------
+
+1. Keep CASA documentation open in a browser to read about the tasks that you will be running.
+
+2. Finish flagging and proceed to calibration.
+
+3. Follow the steps for calibration and apply the calibration to the calibrator sources.
+
+4. Do additional flagging based on the visualization of the calibrated data on calibrators.
+
+5. You can rerun the calibration steps - you need to give new names to the gain tables.
+
+6. Apply calibration to the target source and examine that data.
+
+7. Do additional flagging on the calibrated target source data.
+
+
+
+
+
+
