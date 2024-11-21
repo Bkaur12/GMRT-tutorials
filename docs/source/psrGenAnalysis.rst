@@ -4,7 +4,7 @@ Pulsar General Data Analysis
 ----------------------------
 
 ..
-The tutorial is intended to provide you with a basic introduction to the steps involved in the general analysis of pulsar data, including searching for giant pulses or transient events and timing a newly discovered pulsar. The filterbank data obtained from GMRT are converted to SIGPROC filterbank format using either the filterbank command from SIGPROC or the rficlean command from RFIClean. The tutorial will use data already converted to the SIGPROC filterbank format.
+ The tutorial is intended to provide you with a basic introduction to the steps involved in the general analysis of pulsar data, including searching for giant pulses or transient events and timing a newly discovered pulsar. The filterbank data obtained from GMRT are converted to SIGPROC filterbank format using either the filterbank command from SIGPROC or the rficlean command from RFIClean. The tutorial will use data already converted to the SIGPROC filterbank format.
 
 This part of the tutorial aims to demonstrate the process of pulsar detection and determining its properties using observations from GMRT. We will use band-4 (550-750 MHz) data of a test pulsar.
 
