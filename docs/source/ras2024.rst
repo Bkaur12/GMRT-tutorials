@@ -35,7 +35,7 @@ ugmrt_pb
 
 DO NOT modify the files in this folder (/data).
 
-The space for carrying out the data analysis is: /data1
+The space for carrying out the data analysis is: /data1. 
 Create a folder for data analysis, for example:
 
 .. code-block::
@@ -79,11 +79,15 @@ Go to the directory where you want to analyse the data, for example,
    source start.sh        
    casa
 
-You should see the ipython prompt and a logger window.
-
+You should see the ipython prompt and a logger window. 
 You can start to follow the tutorial.
 
-Location of the data for tutorials:
+For subsequent usage, you only need to use the command casa to start CASA. The log files 
+will be stored at the location where you start the CASA from. Therefore,
+you should first navigate to the folder where you want to analyse your data (e. g. cd /data1/continuum_analysis) 
+and then give the command casa.
+
+Location of the data for the tutorials
 -----------------
 
 .. code-block::
@@ -91,15 +95,12 @@ Location of the data for tutorials:
    cd /data/CASA-tutorial-data
    ls
 
-
-1543+480.FITS are the data for the spectral line tutorial
 SGRB-DATA.FITS are the data for the continuum tutorial
+1543+480.FITS are the data for the spectral line tutorial
 
 In the task 'importgmrt' provide the full
 path, fitsfile ='/data/CASA-tutorial-data/SGRB-DATA.FITS'.
 Follow the instructions in the tutorial to proceed.
-
-
 
 Image visualisation using CARTA
 ------------------
