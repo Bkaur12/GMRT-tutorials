@@ -997,7 +997,7 @@ The following image shows the angular extent of the absorbing gas at the line ch
    :align: center
    :scale: 80%
    
-   *Image from the cube at the single channel where we expect the absorption line. The bluish blob at the center is the angular extent of the source where HI is getting absorbed.*
+   *Image from the cube at the single channel where we expect the absorption line. The bluish blob at the centre is the angular extent of the HI gas, absorbing the 21cm line.*
 
 
 **To extract the spectrum**
