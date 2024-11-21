@@ -1,6 +1,6 @@
-
+RAS2024
 ==============
-Instructions relevant for RAS-2024 participants are provided here.
+Instructions for the RAS-2024 participants are provided here.
 ---------------------
 
 Login to the machine using the username and password provided.
