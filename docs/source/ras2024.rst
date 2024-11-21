@@ -5,6 +5,8 @@ Instructions for the RAS-2024 participants following the tutorials in the E-lab 
 
 Login to the machine using the username and password provided.
 
+Data areas
+---------------------
 Information about the file structure:
 
 .. code-block:: 
