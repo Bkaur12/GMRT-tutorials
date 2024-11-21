@@ -160,6 +160,7 @@ to read the CASA documentation.
 4. Go through at least two rounds of phase only self-calibration.
 
 26 Nov 2024: 11:30 - 12:30 (Introduction to spectral line tutorial)
+-------------------------
 
 27 Nov 2024: Pulsar tutorial
 ------------------------
