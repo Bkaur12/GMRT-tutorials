@@ -131,7 +131,7 @@ The equation to be used is known as the radiometer equation.
 
 Flux  (in Jansky) = SNR x RMS
 
-Where RMS is [T_sys/(G x Antenna factor)] x [1/sqrt(nPol x bandwidth x duration)] x sqrt[W/(P-W)], which has units of Jansky and SNR is the ratio of signal to noise which makes it unitless. T_sys is the antenna temperature (Kelvin; K) and G is the gain of each antenna which has units of K Jy^(-1), nPol is the number of polarizations, and W and P are the pulse width and the period of pulsar, respectively.
+Where RMS is [T_sys/(G x Antenna factor)] x [1/sqrt(nPol x bandwidth x duration)] x sqrt[W/(P-W)], which has units of Jansky and SNR is the ratio of signal to noise which makes it unitless. T_sys is the antenna temperature (Kelvin; K) and G is the gain of each antenna which has units of K/Jy, nPol is the number of polarizations, and W and P are the pulse width and the period of pulsar, respectively.
 
 Antenna factor in the above formula depends on the type of beam used (IA: incoherent array or PA: phased array). For PA the value of antenna factor would be the total number of antennas (N), in the case of IA the value is sqrt(N).
 
