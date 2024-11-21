@@ -1,1 +1,93 @@
+
+==============
 Instructions relevant for RAS-2024 participants are provided here.
+---------------------
+
+Login to the machine using the username and password provided.
+
+Information about the file structure:
+
+.. code-block:: 
+   
+   cd /data
+   
+The folder /data contains the following files:
+
+carta-v4.1.0-x86_64.AppImage  casa-release-5.6.0-60.el7  pulsar_timing
+casa-6.6.4-34-py3.8.el7       CASA-tutorial-data     start.sh
+casadata              pgplot.xwd         ugmrt_pb
+
+DO NOT modify the files in this folder (/data).
+
+The space for carrying out the data analysis is: /data1
+Create a folder for data analysis, for example:
+
+.. code-block::
+
+   mkdir /data1/continuum_analysis
+
+This will be the directory where you will analyse the data.
+
+
+Setting up CASA:
+-----------------
+When you first setup CASA you need create a config file as follows:
+
+.. code-block::
+
+   vi ~/.casa/config.py
+
+Insert 'i' and type the following lines:
+
+.. code-block::
+
+   measurespath = "/data/casadata"
+   # turn off all auto updates of data
+   measures_auto_update = False
+   data_auto_update = False
+
+
+Press ESC and then give the command 
+
+.. code-block::
+
+   :wq! 
+
+This will save and exit the file.
+
+Go to the directory where you want to analyse the data, for example, 
+
+.. code-block::
+
+   cd /data1/continuum_analysis
+   source start.sh        
+   casa
+
+You should see the ipython prompt and a logger window.
+
+You can start to follow the tutorial.
+
+Location of the data for tutorials:
+-----------------
+
+.. code-block::
+
+   cd /data/CASA-tutorial-data
+   ls
+
+
+1543+480.FITS are the data for the spectral line tutorial
+SGRB-DATA.FITS are the data for the continuum tutorial
+
+In the task 'importgmrt' provide the full
+path, fitsfile ='/data/CASA-tutorial-data/SGRB-DATA.FITS'.
+Follow the instructions in the tutorial to proceed.
+
+
+
+Image visualisation using CARTA
+------------------
+
+For viewing the images created in CASA you can use
+CARTA. It can be opened from the command line using
+the command "carta".
