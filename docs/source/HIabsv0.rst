@@ -1071,6 +1071,8 @@ The command to use is repeatflag(visfrom=’source coarse.ms’,visto=’source.
    :alt: Summary of spectral line analysis
    :align: center
    :scale: 80%
+
+    *Flowchart summarising the steps in spectral line analysis.*
    
 
 
