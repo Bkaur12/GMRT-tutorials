@@ -1069,7 +1069,7 @@ The command to use is repeatflag(visfrom=’source coarse.ms’,visto=’source.
 
    
 
-.. figure:: /images/abs_line/flowchart.png
+.. figure:: /images/abs_line/flowchart1.png
    :alt: Summary of spectral line analysis
    :align: center
    :scale: 80%
