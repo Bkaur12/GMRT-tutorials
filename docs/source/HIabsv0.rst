@@ -1067,6 +1067,11 @@ If the selfcal process used coarser resolution file, the same set of flagging pr
 The command to use is repeatflag(visfrom=’source coarse.ms’,visto=’source.ms’). 
 
 
+.. figure:: /images/abs_line/flowchart.png
+   :alt: Summary of spectral line analysis
+   :align: center
+   :scale: 80%
+   
 
 
 
